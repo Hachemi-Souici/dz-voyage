@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { PasswordInput } from "@/components/PasswordInput";
 
 export function ConnexionForm() {
   const router = useRouter();
@@ -54,14 +55,12 @@ export function ConnexionForm() {
         <label htmlFor="password" className="font-utility text-sm uppercase tracking-wide text-nuit">
           Mot de passe
         </label>
-        <input
+        <PasswordInput
           id="password"
-          type="password"
           required
           autoComplete="current-password"
           value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          className="rounded border border-nuit/30 bg-white px-3 py-2 text-encre"
+          onChange={setPassword}
         />
       </div>
 

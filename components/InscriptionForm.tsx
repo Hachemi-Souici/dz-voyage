@@ -3,6 +3,8 @@
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { PasswordInput } from "@/components/PasswordInput";
+import { isPasswordValid, PASSWORD_REQUIREMENTS } from "@/lib/password";
 
 const USERNAME_PATTERN = /^[a-z0-9_-]{3,30}$/i;
 
@@ -11,6 +13,7 @@ export function InscriptionForm() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -22,6 +25,16 @@ export function InscriptionForm() {
       setErrorMessage(
         "Le pseudo doit faire 3 à 30 caractères (lettres, chiffres, - ou _).",
       );
+      return;
+    }
+
+    if (!isPasswordValid(password)) {
+      setErrorMessage(`Mot de passe trop faible. ${PASSWORD_REQUIREMENTS}`);
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setErrorMessage("Les deux mots de passe ne correspondent pas.");
       return;
     }
 
@@ -88,15 +101,31 @@ export function InscriptionForm() {
         <label htmlFor="password" className="font-utility text-sm uppercase tracking-wide text-nuit">
           Mot de passe
         </label>
-        <input
+        <PasswordInput
           id="password"
-          type="password"
           required
           minLength={8}
           autoComplete="new-password"
           value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          className="rounded border border-nuit/30 bg-white px-3 py-2 text-encre"
+          onChange={setPassword}
+        />
+        <p className="text-xs text-encre/60">{PASSWORD_REQUIREMENTS}</p>
+      </div>
+
+      <div className="flex flex-col gap-1">
+        <label
+          htmlFor="confirmPassword"
+          className="font-utility text-sm uppercase tracking-wide text-nuit"
+        >
+          Confirmer le mot de passe
+        </label>
+        <PasswordInput
+          id="confirmPassword"
+          required
+          minLength={8}
+          autoComplete="new-password"
+          value={confirmPassword}
+          onChange={setConfirmPassword}
         />
       </div>
 
