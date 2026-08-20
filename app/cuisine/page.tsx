@@ -1,13 +1,18 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { getContentPhotoUrl, getPhotoUrl } from "@/lib/storage";
 import { chapo, gateaux, regions } from "@/lib/content/cuisine";
+import { recipeToGalleryItem } from "@/lib/gallery-mappers";
+import { pickRandom } from "@/lib/random";
+import { PhotoGallery } from "@/components/PhotoGallery";
 import type { Database } from "@/types/database";
 
 export const metadata: Metadata = { title: "Cuisine" };
 
-type Recipe = Database["public"]["Tables"]["recipes"]["Row"] & { imageUrl: string | null };
+const PREVIEW_COUNT = 3;
+
+type Recipe = Database["public"]["Tables"]["recipes"]["Row"];
 
 export default async function CuisinePage() {
   const supabase = await createClient();
@@ -16,17 +21,10 @@ export default async function CuisinePage() {
     .select("*")
     .order("created_at", { ascending: false });
 
-  const recipesWithImage: Recipe[] = await Promise.all(
-    (recipes ?? []).map(async (recipe) => ({
-      ...recipe,
-      // Contenu admin (post_id null) -> bucket public content-photos ;
-      // recette matérialisée depuis un post approuvé -> bucket privé
-      // post-photos (URL signée).
-      imageUrl: recipe.post_id
-        ? await getPhotoUrl(supabase, recipe.image_path)
-        : getContentPhotoUrl(supabase, recipe.image_path),
-    })),
-  );
+  const getRecipeImageUrl = (recipe: Recipe) =>
+    recipe.post_id
+      ? getPhotoUrl(supabase, recipe.image_path)
+      : getContentPhotoUrl(supabase, recipe.image_path);
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
@@ -35,7 +33,7 @@ export default async function CuisinePage() {
 
       <div className="mt-12 flex flex-col gap-16">
         {regions.map(({ region, titre, texte }) => {
-          const regionRecipes = recipesWithImage.filter((r) => r.region === region);
+          const regionRecipes = (recipes ?? []).filter((r) => r.region === region);
           const plats = regionRecipes.filter((r) => !r.is_dessert);
           const gateauxRegion = regionRecipes.filter((r) => r.is_dessert);
 
@@ -44,8 +42,18 @@ export default async function CuisinePage() {
               <h2 className="font-display text-2xl text-nuit">{titre}</h2>
               <p className="mt-3 max-w-prose text-encre/85">{texte}</p>
 
-              <RecipeGroup titre="Plats" recipes={plats} />
-              <RecipeGroup titre="Gâteaux" recipes={gateauxRegion} />
+              <RecipeGroup
+                titre="Plats"
+                recipes={plats}
+                region={region}
+                getImageUrl={getRecipeImageUrl}
+              />
+              <RecipeGroup
+                titre="Gâteaux"
+                recipes={gateauxRegion}
+                region={region}
+                getImageUrl={getRecipeImageUrl}
+              />
             </section>
           );
         })}
@@ -59,49 +67,41 @@ export default async function CuisinePage() {
   );
 }
 
-function RecipeGroup({ titre, recipes }: { titre: string; recipes: Recipe[] }) {
+async function RecipeGroup({
+  titre,
+  recipes,
+  region,
+  getImageUrl,
+}: {
+  titre: string;
+  recipes: Recipe[];
+  region: string;
+  getImageUrl: (recipe: Recipe) => Promise<string | null> | string | null;
+}) {
+  const preview = pickRandom(recipes, PREVIEW_COUNT);
+  const items = await Promise.all(
+    preview.map(async (recipe) => recipeToGalleryItem(recipe, await getImageUrl(recipe))),
+  );
+
   return (
     <div className="mt-6">
-      <h3 className="font-utility text-sm uppercase tracking-wide text-zellige">
-        {titre}
-      </h3>
-      {recipes.length === 0 ? (
-        <p className="mt-2 text-sm text-encre/60">
-          Aucune recette publiée pour l&apos;instant dans cette catégorie.
-        </p>
-      ) : (
-        <ul className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {recipes.map((recipe) => (
-            <li
-              key={recipe.id}
-              className="overflow-hidden rounded border border-nuit/10 bg-white"
-            >
-              {recipe.imageUrl && (
-                <div className="relative aspect-4/3">
-                  <Image
-                    src={recipe.imageUrl}
-                    alt={recipe.title}
-                    fill
-                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                    className="object-cover"
-                  />
-                </div>
-              )}
-              <div className="p-4">
-                <p className="font-display text-lg text-nuit">{recipe.title}</p>
-                <p className="mt-1 line-clamp-2 text-sm text-encre/70">
-                  {recipe.ingredients}
-                </p>
-                {recipe.imageUrl && recipe.image_credit && (
-                  <p className="mt-2 font-utility text-xs text-encre/50">
-                    {recipe.image_credit}
-                  </p>
-                )}
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
+      <div className="flex items-baseline justify-between gap-4">
+        <h3 className="font-utility text-sm uppercase tracking-wide text-zellige">
+          {titre}
+        </h3>
+        {recipes.length > PREVIEW_COUNT && (
+          <Link
+            href={`/cuisine/${region}`}
+            className="font-utility text-xs uppercase tracking-wide text-argile hover:text-nuit"
+          >
+            Voir tout ({recipes.length})
+          </Link>
+        )}
+      </div>
+      <PhotoGallery
+        items={items}
+        emptyMessage="Aucune recette publiée pour l'instant dans cette catégorie."
+      />
     </div>
   );
 }

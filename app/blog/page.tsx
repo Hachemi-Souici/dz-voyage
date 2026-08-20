@@ -1,28 +1,43 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 import { getPhotoUrl } from "@/lib/storage";
-import { REGION_LABELS, TYPE_LABELS } from "@/lib/labels";
+import { REGION_LABELS, REGIONS } from "@/lib/labels";
+import { postToGalleryItem } from "@/lib/gallery-mappers";
+import { PhotoGallery } from "@/components/PhotoGallery";
+import type { Database, Region } from "@/types/database";
 
 export const metadata: Metadata = { title: "Blog" };
+
+type PostRow = Database["public"]["Tables"]["posts"]["Row"] & {
+  author: { username: string } | null;
+  post_photos: { storage_path: string; position: number }[];
+};
 
 export default async function BlogPage() {
   const supabase = await createClient();
   const { data: posts } = await supabase
     .from("posts")
     .select(
-      "id, type, region, title, created_at, author:profiles(username), post_photos(storage_path, position)",
+      "id, type, region, title, body, created_at, author:profiles(username), post_photos(storage_path, position)",
     )
     .eq("status", "approuvee")
     .order("created_at", { ascending: false });
 
-  const postsWithCover = await Promise.all(
-    (posts ?? []).map(async (post) => {
-      const cover = [...post.post_photos].sort((a, b) => a.position - b.position)[0];
-      const coverUrl = await getPhotoUrl(supabase, cover?.storage_path);
-      return { ...post, coverUrl };
-    }),
+  const getCoverUrl = (post: PostRow) => {
+    const cover = [...post.post_photos].sort((a, b) => a.position - b.position)[0];
+    return getPhotoUrl(supabase, cover?.storage_path);
+  };
+
+  const allPosts = (posts ?? []) as PostRow[];
+  const culinaire = allPosts.filter((p) => p.type === "recette");
+  const endroit = allPosts.filter((p) => p.type === "lieu");
+  const nature = allPosts.filter((p) => p.type === "nature");
+
+  const natureItems = await Promise.all(
+    nature.map(async (post) =>
+      postToGalleryItem(post, post.author?.username, await getCoverUrl(post)),
+    ),
   );
 
   return (
@@ -33,7 +48,7 @@ export default async function BlogPage() {
         est validée manuellement avant publication.
       </p>
 
-      {postsWithCover.length === 0 ? (
+      {allPosts.length === 0 ? (
         <p className="mt-10 text-encre/70">
           Aucune publication pour le moment.{" "}
           <Link href="/blog/publier" className="text-zellige hover:text-argile">
@@ -41,40 +56,88 @@ export default async function BlogPage() {
           </Link>
         </p>
       ) : (
-        <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {postsWithCover.map((post) => (
-            <li
-              key={post.id}
-              className="flex flex-col overflow-hidden rounded border border-nuit/10 bg-white"
-            >
-              {post.coverUrl && (
-                <div className="relative aspect-4/3">
-                  <Image
-                    src={post.coverUrl}
-                    alt=""
-                    fill
-                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                    className="object-cover"
-                  />
-                </div>
-              )}
-              <div className="flex flex-1 flex-col gap-2 p-4">
-                <p className="font-utility text-xs uppercase tracking-wide text-zellige">
-                  {TYPE_LABELS[post.type]} · {REGION_LABELS[post.region]}
-                </p>
-                <h2 className="font-display text-lg text-nuit">
-                  <Link href={`/blog/${post.id}`} className="hover:text-argile">
-                    {post.title}
-                  </Link>
-                </h2>
-                <p className="text-sm text-encre/70">
-                  Par {post.author?.username ?? "anonyme"}
-                </p>
-              </div>
-            </li>
-          ))}
-        </ul>
+        <div className="mt-12 flex flex-col gap-16">
+          <CategorySection titre="Culinaire" posts={culinaire} getCoverUrl={getCoverUrl} />
+          <CategorySection titre="Endroit" posts={endroit} getCoverUrl={getCoverUrl} />
+
+          {nature.length > 0 && (
+            <section>
+              <h2 className="font-display text-2xl text-nuit">Nature</h2>
+              <PhotoGallery
+                items={natureItems}
+                emptyMessage="Aucune publication nature pour l'instant."
+                columns="1-2-3"
+              />
+            </section>
+          )}
+        </div>
       )}
+    </div>
+  );
+}
+
+async function CategorySection({
+  titre,
+  posts,
+  getCoverUrl,
+}: {
+  titre: string;
+  posts: PostRow[];
+  getCoverUrl: (post: PostRow) => Promise<string | null>;
+}) {
+  const regionsWithPosts = REGIONS.filter((region) =>
+    posts.some((post) => post.region === region),
+  );
+
+  return (
+    <section>
+      <h2 className="font-display text-2xl text-nuit">{titre}</h2>
+
+      {regionsWithPosts.length === 0 ? (
+        <p className="mt-3 text-sm text-encre/60">
+          Aucune publication {titre.toLowerCase()} pour l&apos;instant.
+        </p>
+      ) : (
+        <div className="mt-6 flex flex-col gap-10">
+          {regionsWithPosts.map((region) => (
+            <RegionSubsection
+              key={region}
+              region={region}
+              posts={posts.filter((post) => post.region === region)}
+              getCoverUrl={getCoverUrl}
+            />
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}
+
+async function RegionSubsection({
+  region,
+  posts,
+  getCoverUrl,
+}: {
+  region: Region;
+  posts: PostRow[];
+  getCoverUrl: (post: PostRow) => Promise<string | null>;
+}) {
+  const items = await Promise.all(
+    posts.map(async (post) =>
+      postToGalleryItem(post, post.author?.username, await getCoverUrl(post)),
+    ),
+  );
+
+  return (
+    <div>
+      <h3 className="font-utility text-sm uppercase tracking-wide text-zellige">
+        {REGION_LABELS[region]}
+      </h3>
+      <PhotoGallery
+        items={items}
+        emptyMessage="Aucune publication pour l'instant dans cette région."
+        columns="1-2-3"
+      />
     </div>
   );
 }
