@@ -1,0 +1,7 @@
+# Copier vers .dev.vars pour `pnpm preview` (aperçu local sous Workers
+# via wrangler) — mêmes valeurs que .env.local.
+
+NEXTJS_ENV=development
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
