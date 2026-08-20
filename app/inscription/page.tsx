@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { InscriptionForm } from "@/components/InscriptionForm";
+import { GoogleSignInButton } from "@/components/GoogleSignInButton";
 
 export const metadata: Metadata = { title: "Inscription" };
 
@@ -13,14 +14,27 @@ export default function InscriptionPage() {
       </p>
 
       <div className="mt-8">
-        <InscriptionForm />
+        <GoogleSignInButton label="Continuer avec Google" />
       </div>
+
+      <div className="my-6 flex items-center gap-3 text-xs uppercase tracking-wide text-encre/50">
+        <span className="h-px flex-1 bg-nuit/15" />
+        ou
+        <span className="h-px flex-1 bg-nuit/15" />
+      </div>
+
+      <InscriptionForm />
 
       <p className="mt-6 text-sm text-encre/70">
         Déjà inscrit ?{" "}
         <Link href="/connexion" className="text-zellige hover:text-argile">
           Connectez-vous
         </Link>
+      </p>
+
+      <p className="mt-4 text-xs text-encre/50">
+        Avec Google, un pseudo est généré automatiquement à partir de
+        votre email.
       </p>
     </div>
   );
