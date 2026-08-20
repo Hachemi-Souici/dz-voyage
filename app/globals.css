@@ -1,0 +1,22 @@
+@import "tailwindcss";
+@config "../tailwind.config.ts";
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+body {
+  @apply bg-chaux text-encre font-body antialiased;
+}
+
+/* Focus clavier visible partout — ne pas retirer (contrainte projet). */
+:focus-visible {
+  @apply outline outline-2 outline-offset-2 outline-argile;
+}
