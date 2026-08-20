@@ -7,20 +7,42 @@ export const chapo = {
   body: "Des royaumes berbères aux dynasties musulmanes, de la régence d'Ottomane à l'indépendance conquise en 1962, l'Algérie porte plus de trois mille ans d'histoires mêlées — et les raconte encore aujourd'hui dans trois langues et une mosaïque de traditions régionales.",
 };
 
-export type FriseEntry = { periode: string; titre: string; texte: string };
+export type FriseImage = { src: string; alt: string; credit: string };
+export type FriseEntry = {
+  periode: string;
+  titre: string;
+  texte: string;
+  image?: FriseImage;
+};
 
+// Photos sourcées sur Wikimedia Commons (licences libres, brief §4.1) —
+// deux périodes n'ont volontairement pas d'image (aucune piste photo
+// fiable trouvée pour Vandales/Byzantins et les dynasties berbères
+// musulmanes ; aucune photo authentique et bien documentée trouvée pour
+// les scènes de liesse du 5 juillet 1962 — mieux vaut une entrée sans
+// photo qu'une photo hors-sujet).
 export const frise: FriseEntry[] = [
   {
     periode: "Avant le VIIe siècle",
     titre: "Préhistoire et royaumes berbères",
     texte:
       "Les premières traces d'occupation humaine sur le territoire remontent à plusieurs centaines de milliers d'années. Les populations berbères (Amazighs) y organisent dès l'Antiquité des royaumes structurés, dont la Numidie, unifiée au IIe siècle av. J.-C. sous le roi Massinissa, puis rendue célèbre par la résistance de Jugurtha face à Rome.",
+    image: {
+      src: "/frise/massinissa.jpg",
+      alt: "Mausolée royal numide de Massinissa, El Khroub",
+      credit: "Photo : Riad Hadjsadok / Wikimedia Commons, CC BY-SA 4.0",
+    },
   },
   {
     periode: "146 av. J.-C. – Ve siècle",
     titre: "Numidie romaine",
     texte:
       "Après la chute de Carthage, la région est progressivement intégrée à l'Empire romain. Des cités comme Timgad, Djemila, Tipasa ou Cherchell prospèrent et comptent aujourd'hui parmi les sites archéologiques romains les mieux conservés au monde. C'est à Thagaste (aujourd'hui Souk Ahras) qu'est né Augustin d'Hippone, l'un des Pères de l'Église, plus tard évêque d'Hippone (Annaba).",
+    image: {
+      src: "/frise/djemila.jpg",
+      alt: "Colonnes romaines en ruines à Djemila",
+      credit: "Photo : Yves Jalabert / Wikimedia Commons, CC BY-SA 2.0",
+    },
   },
   {
     periode: "Ve – VIIe siècle",
@@ -45,12 +67,22 @@ export const frise: FriseEntry[] = [
     titre: "Régence d'Alger, période ottomane",
     texte:
       "Alger devient le siège d'une régence rattachée à l'Empire ottoman, dirigée localement par un dey. Cette période voit le renforcement d'Alger comme puissance méditerranéenne et l'installation d'une administration ottomane-locale originale.",
+    image: {
+      src: "/frise/ottoman-port.jpg",
+      alt: "Gravure ancienne du port d'Alger, Bab Dzira, époque ottomane",
+      credit: "Gravure : Adolphe Jean-Baptiste Bayot / Wikimedia Commons, CC BY 4.0",
+    },
   },
   {
     periode: "1830 – 1962",
     titre: "Colonisation française",
     texte:
       "La prise d'Alger par la France en 1830 ouvre une période de plus d'un siècle de colonisation, marquée par une administration directe, des transferts de terres et de profonds bouleversements sociaux pour la population algérienne.",
+    image: {
+      src: "/frise/colonial-casbah.jpg",
+      alt: "Alger et la Casbah vers 1900, période coloniale française",
+      credit: "Photo : Viollet, v. 1900 / Wikimedia Commons, domaine public",
+    },
   },
   {
     periode: "1954 – 1962",
@@ -63,6 +95,11 @@ export const frise: FriseEntry[] = [
     titre: "L'Algérie indépendante",
     texte:
       "Depuis 1962, l'Algérie construit son État sur ce socle historique multiple — berbère, arabo-musulman, ottoman et méditerranéen — qui continue d'irriguer sa culture, sa cuisine et son art de vivre régional.",
+    image: {
+      src: "/frise/alger-moderne.jpg",
+      alt: "Vue aérienne de la baie d'Alger aujourd'hui",
+      credit: "Photo : Photographie-Kamel-C / Wikimedia Commons, CC BY 2.0",
+    },
   },
 ];
 

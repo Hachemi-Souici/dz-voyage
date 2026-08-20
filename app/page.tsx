@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { chapo, frise, langues, religion } from "@/lib/content/accueil";
 
 export default function HomePage() {
@@ -33,6 +34,22 @@ export default function HomePage() {
               <h3 className="mt-1 font-display text-xl text-nuit">
                 {entry.titre}
               </h3>
+              {entry.image && (
+                <figure className="mt-3">
+                  <div className="relative aspect-video overflow-hidden rounded">
+                    <Image
+                      src={entry.image.src}
+                      alt={entry.image.alt}
+                      fill
+                      sizes="(min-width: 640px) 42rem, 100vw"
+                      className="object-cover"
+                    />
+                  </div>
+                  <figcaption className="mt-1 font-utility text-xs text-encre/50">
+                    {entry.image.credit}
+                  </figcaption>
+                </figure>
+              )}
               <p className="mt-2 text-encre/85">{entry.texte}</p>
             </li>
           ))}
