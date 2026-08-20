@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
-import { getPhotoUrl } from "@/lib/storage";
+import { getContentPhotoUrl, getPhotoUrl } from "@/lib/storage";
 import { chapo, musique, regions } from "@/lib/content/visiter";
 import type { Database } from "@/types/database";
 
@@ -20,7 +20,12 @@ export default async function VisiterPage() {
   const placesWithImage: Place[] = await Promise.all(
     (places ?? []).map(async (place) => ({
       ...place,
-      imageUrl: await getPhotoUrl(supabase, place.image_path),
+      // Contenu admin (post_id null) -> bucket public content-photos ;
+      // lieu matérialisé depuis un post approuvé -> bucket privé
+      // post-photos (URL signée).
+      imageUrl: place.post_id
+        ? await getPhotoUrl(supabase, place.image_path)
+        : getContentPhotoUrl(supabase, place.image_path),
     })),
   );
 
@@ -92,6 +97,11 @@ function PlacesGroup({ places }: { places: Place[] }) {
                 <p className="mt-1 line-clamp-3 text-sm text-encre/70">
                   {place.description}
                 </p>
+                {place.imageUrl && place.image_credit && (
+                  <p className="mt-2 font-utility text-xs text-encre/50">
+                    {place.image_credit}
+                  </p>
+                )}
               </div>
             </li>
           ))}

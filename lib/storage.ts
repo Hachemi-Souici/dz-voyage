@@ -22,3 +22,17 @@ export async function getPhotoUrl(
   if (error || !data) return null;
   return data.signedUrl;
 }
+
+/**
+ * Contenu éditorial (recipes/places admin-seedés) : bucket public
+ * content-photos, pas de RLS à traverser — URL directe et stable.
+ */
+export function getContentPhotoUrl(
+  supabase: SupabaseClient<Database>,
+  storagePath: string | null | undefined,
+): string | null {
+  if (!storagePath) return null;
+
+  const { data } = supabase.storage.from("content-photos").getPublicUrl(storagePath);
+  return data.publicUrl;
+}

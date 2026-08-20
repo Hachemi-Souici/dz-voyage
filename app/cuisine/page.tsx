@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
-import { getPhotoUrl } from "@/lib/storage";
+import { getContentPhotoUrl, getPhotoUrl } from "@/lib/storage";
 import { chapo, gateaux, regions } from "@/lib/content/cuisine";
 import type { Database } from "@/types/database";
 
@@ -19,7 +19,12 @@ export default async function CuisinePage() {
   const recipesWithImage: Recipe[] = await Promise.all(
     (recipes ?? []).map(async (recipe) => ({
       ...recipe,
-      imageUrl: await getPhotoUrl(supabase, recipe.image_path),
+      // Contenu admin (post_id null) -> bucket public content-photos ;
+      // recette matérialisée depuis un post approuvé -> bucket privé
+      // post-photos (URL signée).
+      imageUrl: recipe.post_id
+        ? await getPhotoUrl(supabase, recipe.image_path)
+        : getContentPhotoUrl(supabase, recipe.image_path),
     })),
   );
 
@@ -87,6 +92,11 @@ function RecipeGroup({ titre, recipes }: { titre: string; recipes: Recipe[] }) {
                 <p className="mt-1 line-clamp-2 text-sm text-encre/70">
                   {recipe.ingredients}
                 </p>
+                {recipe.imageUrl && recipe.image_credit && (
+                  <p className="mt-2 font-utility text-xs text-encre/50">
+                    {recipe.image_credit}
+                  </p>
+                )}
               </div>
             </li>
           ))}

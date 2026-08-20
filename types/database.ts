@@ -132,6 +132,7 @@ export interface Database {
           ingredients: string;
           steps: string;
           image_path: string | null;
+          image_credit: string | null;
           created_at: string;
         };
         Insert: {
@@ -143,6 +144,7 @@ export interface Database {
           ingredients: string;
           steps: string;
           image_path?: string | null;
+          image_credit?: string | null;
           created_at?: string;
         };
         Update: Partial<{
@@ -152,6 +154,7 @@ export interface Database {
           ingredients: string;
           steps: string;
           image_path: string | null;
+          image_credit: string | null;
         }>;
         Relationships: [
           {
@@ -172,6 +175,7 @@ export interface Database {
           description: string;
           category: string | null;
           image_path: string | null;
+          image_credit: string | null;
           created_at: string;
         };
         Insert: {
@@ -182,6 +186,7 @@ export interface Database {
           description: string;
           category?: string | null;
           image_path?: string | null;
+          image_credit?: string | null;
           created_at?: string;
         };
         Update: Partial<{
@@ -190,6 +195,7 @@ export interface Database {
           description: string;
           category: string | null;
           image_path: string | null;
+          image_credit: string | null;
         }>;
         Relationships: [
           {
