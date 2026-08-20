@@ -40,11 +40,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# fichiers d'instructions générés automatiquement par `next dev`/`next
-# build` (agentRules) — régénérés localement à chaque run, à ne pas
-# publier
-/AGENTS.md
-/CLAUDE.md
 
 # cloudflare (OpenNext + wrangler)
 /.open-next/
