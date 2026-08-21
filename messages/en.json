@@ -15,6 +15,8 @@
     "siteName": "Dz.Voyage",
     "ariaLabel": "Main navigation",
     "menuLabel": "Menu",
+    "pagesLabel": "Pages",
+    "accountLabel": "Account",
     "languageSwitcherLabel": "Change language",
     "home": "Home",
     "cuisine": "Food",

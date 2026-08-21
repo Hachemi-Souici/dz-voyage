@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { deletePostAndPhotos } from "@/lib/delete-post";
 
 /**
  * Suppression d'une publication — reservee a son auteur ou a un admin
- * (pour n'importe quelle publication). Passe par le service role pour
- * nettoyer aussi les photos en storage (post_photos est supprime par
- * cascade en base, mais pas les fichiers binaires eux-memes).
+ * (pour n'importe quelle publication).
  */
 export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id: postId } = await params;
@@ -44,20 +43,9 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
     return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
   }
 
-  const { data: photos } = await admin
-    .from("post_photos")
-    .select("storage_path")
-    .eq("post_id", postId);
-
-  const storagePaths = (photos ?? []).map((photo) => photo.storage_path);
-  if (storagePaths.length > 0) {
-    await admin.storage.from("post-photos").remove(storagePaths);
-  }
-
-  const { error: deleteError } = await admin.from("posts").delete().eq("id", postId);
-
-  if (deleteError) {
-    return NextResponse.json({ error: deleteError.message }, { status: 500 });
+  const { error } = await deletePostAndPhotos(admin, postId);
+  if (error) {
+    return NextResponse.json({ error }, { status: 500 });
   }
 
   return NextResponse.json({ success: true });

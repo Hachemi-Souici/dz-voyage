@@ -5,10 +5,13 @@ import { useTranslations } from "next-intl";
 import NextLink from "next/link";
 import { Link } from "@/i18n/navigation";
 import { SignOutButton } from "@/components/SignOutButton";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 type Profile = { username: string; isAdmin: boolean } | null;
 
 const MENU_ITEM_CLASS = "block rounded px-3 py-2 hover:bg-chaux hover:text-argile";
+const SECTION_LABEL_CLASS =
+  "px-3 pb-1 pt-2 font-utility text-xs uppercase tracking-wide text-encre/50";
 
 /**
  * Nav principale + compte utilisateur, replies en hamburger sur
@@ -16,7 +19,9 @@ const MENU_ITEM_CLASS = "block rounded px-3 py-2 hover:bg-chaux hover:text-argil
  * restent reserves a lg (voir SiteHeader). Contact ("Devenir guide")
  * desactive du menu pour l'instant — decision produit temporaire.
  */
-export function MobileNav({ profile }: { profile: Profile }) {
+type Props = { profile: Profile; showLanguageSwitcher?: boolean };
+
+export function MobileNav({ profile, showLanguageSwitcher = true }: Props) {
   const t = useTranslations("nav");
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -69,6 +74,16 @@ export function MobileNav({ profile }: { profile: Profile }) {
           aria-label={t("ariaLabel")}
           className="absolute right-0 z-20 mt-2 w-56 rounded-xl border border-nuit/10 bg-white p-1 shadow-lg"
         >
+          {showLanguageSwitcher && (
+            <>
+              <div className="px-2 pt-1">
+                <LanguageSwitcher />
+              </div>
+              <div className="my-1 h-px bg-nuit/10" aria-hidden="true" />
+            </>
+          )}
+
+          <p className={SECTION_LABEL_CLASS}>{t("pagesLabel")}</p>
           <ul className="flex flex-col font-utility text-sm uppercase tracking-wide text-nuit">
             {links.map((link) => (
               <li key={link.href}>
@@ -81,6 +96,7 @@ export function MobileNav({ profile }: { profile: Profile }) {
 
           <div className="my-1 h-px bg-nuit/10" aria-hidden="true" />
 
+          <p className={SECTION_LABEL_CLASS}>{t("accountLabel")}</p>
           <ul className="flex flex-col font-utility text-sm uppercase tracking-wide text-nuit">
             {profile ? (
               <>

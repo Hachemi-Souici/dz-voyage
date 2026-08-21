@@ -46,7 +46,7 @@ export async function SiteHeader({ showLanguageSwitcher = true }: Props = {}) {
             (MobileNav) ; la cloche de notification, elle, reste
             toujours visible dans le header. */}
         <div className="flex items-center gap-4 font-utility text-sm uppercase tracking-wide">
-          {showLanguageSwitcher && <LanguageSwitcher />}
+          {showLanguageSwitcher && <div className="hidden lg:block"><LanguageSwitcher /></div>}
           {profile && <NotificationBell userId={profile.id} />}
           <div className="hidden lg:block">
             {profile ? (
@@ -57,7 +57,7 @@ export async function SiteHeader({ showLanguageSwitcher = true }: Props = {}) {
               </Link>
             )}
           </div>
-          <MobileNav profile={menuProfile} />
+          <MobileNav profile={menuProfile} showLanguageSwitcher={showLanguageSwitcher} />
         </div>
       </div>
     </header>
