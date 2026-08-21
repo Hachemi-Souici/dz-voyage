@@ -28,6 +28,22 @@ export const REGION_LABELS_EN: Record<Region, string> = {
 
 export const REGIONS: Region[] = ["est", "ouest", "centre", "sud"];
 
+/**
+ * Couleur d'accent par région — significative sans casser la cohérence
+ * de la palette (brief §1) : est = grès ocre des gorges de Constantine
+ * et des ruines romaines, ouest = zellige (faïence de Tlemcen, déjà
+ * dans la palette), centre = olivier (Kabylie/Djurdjura), sud = dune
+ * (sable saharien, déjà dans la palette). Classes Tailwind écrites en
+ * toutes lettres (pas d'interpolation) pour rester détectables par le
+ * scanner JIT.
+ */
+export const REGION_ACCENT: Record<Region, { text: string; border: string }> = {
+  est: { text: "text-gres", border: "border-gres" },
+  ouest: { text: "text-zellige", border: "border-zellige" },
+  centre: { text: "text-olivier", border: "border-olivier" },
+  sud: { text: "text-dune", border: "border-dune" },
+};
+
 export const STATUS_LABELS: Record<PostStatus, string> = {
   en_attente: "En attente",
   approuvee: "Approuvée",

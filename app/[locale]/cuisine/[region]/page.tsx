@@ -4,7 +4,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getContentPhotoUrl, getPhotoUrl } from "@/lib/storage";
-import { getRegionLabels, REGIONS } from "@/lib/labels";
+import { getRegionLabels, REGION_ACCENT, REGIONS } from "@/lib/labels";
 import { recipeToGalleryItem } from "@/lib/gallery-mappers";
 import { PhotoGallery } from "@/components/PhotoGallery";
 import type { Database, Region } from "@/types/database";
@@ -31,6 +31,7 @@ export default async function CuisineRegionPage({ params }: PageProps) {
 
   const t = await getTranslations("cuisine");
   const regionLabel = getRegionLabels(locale)[region];
+  const accent = REGION_ACCENT[region];
 
   const supabase = await createClient();
   const { data: recipes } = await supabase
@@ -60,19 +61,19 @@ export default async function CuisineRegionPage({ params }: PageProps) {
       >
         {t("backToRegions")}
       </Link>
-      <h1 className="mt-2 font-display text-3xl text-nuit">
+      <h1 className={`mt-2 font-display text-3xl ${accent.text}`}>
         {t("regionTitle", { region: regionLabel })}
       </h1>
 
       <div className="mt-8">
-        <h2 className="font-utility text-sm uppercase tracking-wide text-zellige">
+        <h2 className={`font-utility text-sm uppercase tracking-wide ${accent.text}`}>
           {t("dishes")}
         </h2>
         <PhotoGallery items={platsItems} emptyMessage={t("emptyDishes")} columns="1-2-3" />
       </div>
 
       <div className="mt-10">
-        <h2 className="font-utility text-sm uppercase tracking-wide text-zellige">
+        <h2 className={`font-utility text-sm uppercase tracking-wide ${accent.text}`}>
           {t("cakes")}
         </h2>
         <PhotoGallery items={gateauxItems} emptyMessage={t("emptyCakes")} columns="1-2-3" />

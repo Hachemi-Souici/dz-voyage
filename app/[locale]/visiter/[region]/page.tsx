@@ -4,7 +4,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getContentPhotoUrl, getPhotoUrl } from "@/lib/storage";
-import { getRegionLabels, REGIONS } from "@/lib/labels";
+import { getRegionLabels, REGION_ACCENT, REGIONS } from "@/lib/labels";
 import { placeToGalleryItem } from "@/lib/gallery-mappers";
 import { PhotoGallery } from "@/components/PhotoGallery";
 import type { Database, Region } from "@/types/database";
@@ -31,6 +31,7 @@ export default async function VisiterRegionPage({ params }: PageProps) {
 
   const t = await getTranslations("visit");
   const regionLabel = getRegionLabels(locale)[region];
+  const accent = REGION_ACCENT[region];
 
   const supabase = await createClient();
   const { data: places } = await supabase
@@ -56,7 +57,7 @@ export default async function VisiterRegionPage({ params }: PageProps) {
       >
         {t("backToRegions")}
       </Link>
-      <h1 className="mt-2 font-display text-3xl text-nuit">
+      <h1 className={`mt-2 font-display text-3xl ${accent.text}`}>
         {t("regionTitle", { region: regionLabel })}
       </h1>
 

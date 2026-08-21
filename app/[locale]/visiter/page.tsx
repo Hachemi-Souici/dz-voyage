@@ -6,6 +6,7 @@ import { getContentPhotoUrl, getPhotoUrl } from "@/lib/storage";
 import * as visiterFr from "@/lib/content/visiter";
 import * as visiterEn from "@/lib/content/visiter.en";
 import { placeToGalleryItem } from "@/lib/gallery-mappers";
+import { REGION_ACCENT } from "@/lib/labels";
 import { pickRandom } from "@/lib/random";
 import { PhotoGallery } from "@/components/PhotoGallery";
 import type { Database, Region } from "@/types/database";
@@ -51,9 +52,11 @@ export default async function VisiterPage({ params }: Props) {
           const regionPlaces = (places ?? []).filter((p) => p.region === region);
           const regionFestivals = (festivals ?? []).filter((f) => f.region === region);
 
+          const accent = REGION_ACCENT[region];
+
           return (
-            <section key={region}>
-              <h2 className="font-display text-2xl text-nuit">{titre}</h2>
+            <section key={region} className={`border-l-4 ${accent.border} pl-6`}>
+              <h2 className={`font-display text-2xl ${accent.text}`}>{titre}</h2>
               <p className="mt-3 max-w-prose text-encre/85">{texte}</p>
 
               <PlacesGroup
