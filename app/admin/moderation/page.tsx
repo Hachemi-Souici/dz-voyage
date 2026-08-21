@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { redirect } from "next/navigation";
+import { redirect } from "@/i18n/navigation";
 import { getCurrentProfile } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { getPhotoUrl } from "@/lib/storage";
@@ -12,8 +12,8 @@ export const metadata: Metadata = { title: "Modération" };
 export default async function ModerationPage() {
   const profile = await getCurrentProfile();
 
-  if (!profile) redirect("/connexion");
-  if (!profile.is_admin) redirect("/");
+  if (!profile) return redirect({ href: "/connexion", locale: "fr" });
+  if (!profile.is_admin) return redirect({ href: "/", locale: "fr" });
 
   const supabase = await createClient();
   const { data: posts } = await supabase

@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { getPhotoUrl } from "@/lib/storage";
-import { REGION_LABELS, TYPE_LABELS } from "@/lib/labels";
+import { getRegionLabels, getTypeLabels } from "@/lib/labels";
 import { LikeDislikeButtons } from "@/components/LikeDislikeButtons";
 import type { ReactionType } from "@/types/database";
 
-type PageProps = { params: Promise<{ id: string }> };
+type PageProps = { params: Promise<{ locale: string; id: string }> };
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
@@ -17,7 +18,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function BlogPostPage({ params }: PageProps) {
-  const { id } = await params;
+  const { locale, id } = await params;
+  setRequestLocale(locale);
+
+  const t = await getTranslations("blog");
   const supabase = await createClient();
 
   const { data: post } = await supabase
@@ -53,10 +57,15 @@ export default async function BlogPostPage({ params }: PageProps) {
   return (
     <article className="mx-auto max-w-2xl px-4 py-16 sm:px-6">
       <p className="font-utility text-xs uppercase tracking-wide text-zellige">
-        {TYPE_LABELS[post.type]} · {REGION_LABELS[post.region]}
+        {getTypeLabels(locale)[post.type]} · {getRegionLabels(locale)[post.region]}
       </p>
       <h1 className="mt-2 font-display text-3xl text-nuit">{post.title}</h1>
-      <p className="mt-1 text-sm text-encre/70">Par {post.author?.username ?? "anonyme"}</p>
+      <p className="mt-1 text-sm text-encre/70">
+        {t("by", { username: post.author?.username ?? t("anonymous") })}
+      </p>
+      {locale === "en" && (
+        <p className="mt-1 text-xs italic text-encre/50">{t("originalFrenchNotice")}</p>
+      )}
 
       <div className="mt-8 flex flex-col gap-4">
         {photoUrls

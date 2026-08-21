@@ -1,0 +1,171 @@
+{
+  "metadata": {
+    "siteTitle": "Dz.Voyage — Découvrir l'Algérie",
+    "siteDescription": "Histoire, cuisine, lieux à visiter et guides bénévoles pour explorer l'Algérie région par région.",
+    "home": "Accueil",
+    "cuisine": "Cuisine",
+    "visit": "À visiter",
+    "blog": "Blog",
+    "contact": "Devenir guide bénévole",
+    "login": "Connexion",
+    "register": "Inscription",
+    "publish": "Publier"
+  },
+  "nav": {
+    "siteName": "Dz.Voyage",
+    "ariaLabel": "Navigation principale",
+    "menuLabel": "Menu",
+    "languageSwitcherLabel": "Changer de langue",
+    "home": "Accueil",
+    "cuisine": "Cuisine",
+    "visit": "À visiter",
+    "blog": "Blog",
+    "contact": "Devenir guide",
+    "publish": "Publier",
+    "myPosts": "Mes publications",
+    "moderation": "Modération",
+    "login": "Connexion",
+    "logout": "Se déconnecter",
+    "accountMenuLabel": "Menu du compte"
+  },
+  "footer": {
+    "tagline": "Un site de passionnés pour découvrir l'Algérie région par région — histoire, cuisine, lieux à visiter et guides bénévoles sur le terrain."
+  },
+  "home": {
+    "historyTitle": "Trois mille ans d'histoire"
+  },
+  "cuisine": {
+    "title": "Cuisine",
+    "dishes": "Plats",
+    "cakes": "Gâteaux",
+    "viewAll": "Voir tout ({count})",
+    "emptyDishes": "Aucun plat publié pour l'instant dans cette région.",
+    "emptyCakes": "Aucun gâteau publié pour l'instant dans cette région.",
+    "emptyCategory": "Aucune recette publiée pour l'instant dans cette catégorie.",
+    "backToRegions": "← Toutes les régions",
+    "regionTitle": "Cuisine — {region}"
+  },
+  "visit": {
+    "title": "À visiter",
+    "places": "Lieux à visiter",
+    "festivals": "Festivals",
+    "viewAll": "Voir tout ({count})",
+    "emptyPlaces": "Aucun lieu publié pour l'instant dans cette région.",
+    "emptyFestivals": "Aucun festival référencé pour l'instant dans cette région.",
+    "backToRegions": "← Toutes les régions",
+    "regionTitle": "À visiter — {region}"
+  },
+  "blog": {
+    "title": "Le blog des voyageurs",
+    "subtitle": "Nature, recettes et lieux partagés par la communauté — chaque photo est validée manuellement avant publication.",
+    "empty": "Aucune publication pour le moment.",
+    "emptyCta": "Soyez le premier à partager une découverte.",
+    "culinary": "Culinaire",
+    "place": "Endroit",
+    "nature": "Nature",
+    "emptyCategory": "Aucune publication {category} pour l'instant.",
+    "emptyNature": "Aucune publication nature pour l'instant.",
+    "emptyRegion": "Aucune publication pour l'instant dans cette région.",
+    "by": "Par {username}",
+    "anonymous": "anonyme",
+    "originalFrenchNotice": "Contenu original en français, non traduit.",
+    "publishTitle": "Publier sur le blog",
+    "publishIntro": "Partagez une découverte nature, une recette ou un lieu à visiter. Publié sous le pseudo <b>{username}</b>.",
+    "viewPost": "Voir la publication"
+  },
+  "notifications": {
+    "bellLabel": "Notifications",
+    "empty": "Aucune notification.",
+    "postApproved": "Votre publication « {title} » a été approuvée."
+  },
+  "myPosts": {
+    "title": "Mes publications",
+    "myPostsSection": "Mes publications",
+    "myReactionsSection": "Mes réactions",
+    "emptyPosts": "Vous n'avez encore rien publié.",
+    "emptyPostsCta": "Publier une découverte.",
+    "emptyReactions": "Vous n'avez encore aimé ou pas aimé aucune publication."
+  },
+  "gallery": {
+    "noPhoto": "Pas de photo",
+    "close": "Fermer",
+    "viewPost": "Voir la publication"
+  },
+  "contactForm": {
+    "intro": "Vous connaissez votre région et aimez la faire découvrir ? Devenez guide bénévole pour accompagner les visiteurs qui traversent l'Algérie. Laissez vos coordonnées et la région où vous pouvez accueillir des voyageurs — nous vous recontactons.",
+    "nameLabel": "Nom complet",
+    "emailLabel": "Email",
+    "regionLabel": "Région où vous pouvez accueillir des voyageurs",
+    "messageLabel": "Message (facultatif)",
+    "submit": "Envoyer ma candidature",
+    "submitting": "Envoi…",
+    "error": "Impossible d'envoyer votre demande. Réessayez.",
+    "success": "Merci ! Votre demande a bien été envoyée, nous vous recontactons bientôt."
+  },
+  "loginForm": {
+    "title": "Connexion",
+    "subtitle": "Connectez-vous pour publier sur le blog et réagir aux publications.",
+    "oauthError": "La connexion avec Google a échoué. Réessayez.",
+    "googleCta": "Se connecter avec Google",
+    "or": "ou",
+    "emailLabel": "Email",
+    "passwordLabel": "Mot de passe",
+    "submit": "Se connecter",
+    "submitting": "Connexion…",
+    "error": "Email ou mot de passe incorrect.",
+    "noAccount": "Pas encore de compte ?",
+    "signUpLink": "Inscrivez-vous"
+  },
+  "registerForm": {
+    "title": "Inscription",
+    "subtitle": "Créez un compte pour partager vos photos et découvertes d'Algérie.",
+    "googleCta": "Continuer avec Google",
+    "or": "ou",
+    "usernameLabel": "Pseudo",
+    "usernameHint": "Affiché publiquement sur vos photos et publications.",
+    "emailLabel": "Email",
+    "passwordLabel": "Mot de passe",
+    "confirmPasswordLabel": "Confirmer le mot de passe",
+    "submit": "Créer mon compte",
+    "submitting": "Création…",
+    "usernameInvalid": "Le pseudo doit faire 3 à 30 caractères (lettres, chiffres, - ou _).",
+    "passwordWeak": "Mot de passe trop faible. {requirements}",
+    "passwordMismatch": "Les deux mots de passe ne correspondent pas.",
+    "emailTaken": "Cet email est déjà utilisé.",
+    "genericError": "Impossible de créer le compte. Réessayez.",
+    "alreadyAccount": "Déjà inscrit ?",
+    "loginLink": "Connectez-vous",
+    "googleNote": "Avec Google, un pseudo est généré automatiquement à partir de votre email.",
+    "passwordRequirements": "8 caractères minimum, avec au moins une majuscule, une minuscule et un chiffre."
+  },
+  "passwordInput": {
+    "show": "Afficher le mot de passe",
+    "hide": "Masquer le mot de passe"
+  },
+  "likeDislike": {
+    "like": "J'aime",
+    "dislike": "Je n'aime pas"
+  },
+  "uploadForm": {
+    "typeLegend": "Type de publication",
+    "regionLabel": "Région",
+    "titleLabel": "Titre",
+    "placeNameLabel": "Nom du lieu",
+    "categoryLabel": "Catégorie (site antique, plage, montagne…)",
+    "descriptionLabel": "Description",
+    "storyLabel": "Récit",
+    "ingredientsLabel": "Ingrédients",
+    "stepsLabel": "Étapes de préparation",
+    "isDessertLabel": "C'est un gâteau / dessert",
+    "photosLabel": "Photos",
+    "photosHint": "Vos photos seront taguées avec votre pseudo et passeront par une validation manuelle avant publication.",
+    "submit": "Publier",
+    "submitting": "Envoi…",
+    "errorNoPhoto": "Ajoutez au moins une photo.",
+    "errorRecipeFields": "Renseignez les ingrédients et les étapes de la recette.",
+    "errorPlaceName": "Renseignez le nom du lieu.",
+    "errorSavePost": "Impossible d'enregistrer la publication. Réessayez.",
+    "errorUploadPhoto": "Publication enregistrée mais l'envoi d'une photo a échoué.",
+    "success": "Publication envoyée ! Elle sera visible après validation manuelle des photos."
+  }
+}

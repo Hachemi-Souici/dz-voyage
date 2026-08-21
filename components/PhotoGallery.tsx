@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import type { GalleryItem } from "@/types/gallery";
 
 type Props = {
@@ -17,6 +18,7 @@ type Props = {
  * cuisine, visiter et blog pour un rendu cohérent.
  */
 export function PhotoGallery({ items, emptyMessage, columns = "2-3" }: Props) {
+  const t = useTranslations("gallery");
   const [openId, setOpenId] = useState<string | null>(null);
   const openItem = items.find((item) => item.id === openId) ?? null;
 
@@ -62,7 +64,7 @@ export function PhotoGallery({ items, emptyMessage, columns = "2-3" }: Props) {
               ) : (
                 <div className="flex aspect-4/3 items-center justify-center bg-chaux text-encre/40">
                   <span className="font-utility text-xs uppercase tracking-wide">
-                    Pas de photo
+                    {t("noPhoto")}
                   </span>
                 </div>
               )}
@@ -124,7 +126,7 @@ export function PhotoGallery({ items, emptyMessage, columns = "2-3" }: Props) {
                     href={openItem.href}
                     className="rounded bg-argile px-4 py-2 font-utility text-sm uppercase tracking-wide text-chaux hover:bg-nuit"
                   >
-                    {openItem.hrefLabel ?? "Voir la publication"}
+                    {openItem.hrefLabel ?? t("viewPost")}
                   </Link>
                 )}
                 <button
@@ -132,7 +134,7 @@ export function PhotoGallery({ items, emptyMessage, columns = "2-3" }: Props) {
                   onClick={() => setOpenId(null)}
                   className="rounded border border-nuit/30 px-4 py-2 font-utility text-sm uppercase tracking-wide text-nuit hover:border-nuit"
                 >
-                  Fermer
+                  {t("close")}
                 </button>
               </div>
             </div>

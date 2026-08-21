@@ -1,7 +1,17 @@
 import Image from "next/image";
-import { chapo, frise, langues, religion } from "@/lib/content/accueil";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import * as accueilFr from "@/lib/content/accueil";
+import * as accueilEn from "@/lib/content/accueil.en";
 
-export default function HomePage() {
+type Props = { params: Promise<{ locale: string }> };
+
+export default async function HomePage({ params }: Props) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
+  const { chapo, frise, langues, religion } = locale === "en" ? accueilEn : accueilFr;
+  const t = await getTranslations("home");
+
   return (
     <div>
       <section className="border-b border-nuit/10 bg-nuit text-chaux">
@@ -17,9 +27,7 @@ export default function HomePage() {
       </section>
 
       <section className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
-        <h2 className="font-display text-2xl text-nuit">
-          Trois mille ans d&apos;histoire
-        </h2>
+        <h2 className="font-display text-2xl text-nuit">{t("historyTitle")}</h2>
 
         <ol className="mt-8 border-l-2 border-dune/60 pl-6">
           {frise.map((entry) => (

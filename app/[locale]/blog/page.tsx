@@ -1,20 +1,34 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getPhotoUrl } from "@/lib/storage";
-import { REGION_LABELS, REGIONS } from "@/lib/labels";
+import { REGIONS, getRegionLabels } from "@/lib/labels";
 import { postToGalleryItem } from "@/lib/gallery-mappers";
 import { PhotoGallery } from "@/components/PhotoGallery";
 import type { Database, Region } from "@/types/database";
 
-export const metadata: Metadata = { title: "Blog" };
+type Props = { params: Promise<{ locale: string }> };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "metadata" });
+  return { title: t("blog") };
+}
 
 type PostRow = Database["public"]["Tables"]["posts"]["Row"] & {
   author: { username: string } | null;
   post_photos: { storage_path: string; position: number }[];
 };
 
-export default async function BlogPage() {
+type T = (key: string, values?: Record<string, string | number>) => string;
+
+export default async function BlogPage({ params }: Props) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
+  const t = await getTranslations("blog");
+
   const supabase = await createClient();
   const { data: posts } = await supabase
     .from("posts")
@@ -36,38 +50,45 @@ export default async function BlogPage() {
 
   const natureItems = await Promise.all(
     nature.map(async (post) =>
-      postToGalleryItem(post, post.author?.username, await getCoverUrl(post)),
+      postToGalleryItem(post, post.author?.username, await getCoverUrl(post), locale),
     ),
   );
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
-      <h1 className="font-display text-3xl text-nuit">Le blog des voyageurs</h1>
-      <p className="mt-2 max-w-prose text-encre/80">
-        Nature, recettes et lieux partagés par la communauté — chaque photo
-        est validée manuellement avant publication.
-      </p>
+      <h1 className="font-display text-3xl text-nuit">{t("title")}</h1>
+      <p className="mt-2 max-w-prose text-encre/80">{t("subtitle")}</p>
 
       {allPosts.length === 0 ? (
         <p className="mt-10 text-encre/70">
-          Aucune publication pour le moment.{" "}
+          {t("empty")}{" "}
           <Link href="/blog/publier" className="text-zellige hover:text-argile">
-            Soyez le premier à partager une découverte.
+            {t("emptyCta")}
           </Link>
         </p>
       ) : (
         <div className="mt-12 flex flex-col gap-16">
-          <CategorySection titre="Culinaire" posts={culinaire} getCoverUrl={getCoverUrl} />
-          <CategorySection titre="Endroit" posts={endroit} getCoverUrl={getCoverUrl} />
+          <CategorySection
+            titre={t("culinary")}
+            emptyLabel={t("emptyCategory", { category: t("culinary").toLowerCase() })}
+            posts={culinaire}
+            getCoverUrl={getCoverUrl}
+            locale={locale}
+            t={t}
+          />
+          <CategorySection
+            titre={t("place")}
+            emptyLabel={t("emptyCategory", { category: t("place").toLowerCase() })}
+            posts={endroit}
+            getCoverUrl={getCoverUrl}
+            locale={locale}
+            t={t}
+          />
 
           {nature.length > 0 && (
             <section>
-              <h2 className="font-display text-2xl text-nuit">Nature</h2>
-              <PhotoGallery
-                items={natureItems}
-                emptyMessage="Aucune publication nature pour l'instant."
-                columns="1-2-3"
-              />
+              <h2 className="font-display text-2xl text-nuit">{t("nature")}</h2>
+              <PhotoGallery items={natureItems} emptyMessage={t("emptyNature")} columns="1-2-3" />
             </section>
           )}
         </div>
@@ -78,12 +99,18 @@ export default async function BlogPage() {
 
 async function CategorySection({
   titre,
+  emptyLabel,
   posts,
   getCoverUrl,
+  locale,
+  t,
 }: {
   titre: string;
+  emptyLabel: string;
   posts: PostRow[];
   getCoverUrl: (post: PostRow) => Promise<string | null>;
+  locale: string;
+  t: T;
 }) {
   const regionsWithPosts = REGIONS.filter((region) =>
     posts.some((post) => post.region === region),
@@ -94,9 +121,7 @@ async function CategorySection({
       <h2 className="font-display text-2xl text-nuit">{titre}</h2>
 
       {regionsWithPosts.length === 0 ? (
-        <p className="mt-3 text-sm text-encre/60">
-          Aucune publication {titre.toLowerCase()} pour l&apos;instant.
-        </p>
+        <p className="mt-3 text-sm text-encre/60">{emptyLabel}</p>
       ) : (
         <div className="mt-6 flex flex-col gap-10">
           {regionsWithPosts.map((region) => (
@@ -105,6 +130,8 @@ async function CategorySection({
               region={region}
               posts={posts.filter((post) => post.region === region)}
               getCoverUrl={getCoverUrl}
+              locale={locale}
+              t={t}
             />
           ))}
         </div>
@@ -117,27 +144,27 @@ async function RegionSubsection({
   region,
   posts,
   getCoverUrl,
+  locale,
+  t,
 }: {
   region: Region;
   posts: PostRow[];
   getCoverUrl: (post: PostRow) => Promise<string | null>;
+  locale: string;
+  t: T;
 }) {
   const items = await Promise.all(
     posts.map(async (post) =>
-      postToGalleryItem(post, post.author?.username, await getCoverUrl(post)),
+      postToGalleryItem(post, post.author?.username, await getCoverUrl(post), locale),
     ),
   );
 
   return (
     <div>
       <h3 className="font-utility text-sm uppercase tracking-wide text-zellige">
-        {REGION_LABELS[region]}
+        {getRegionLabels(locale)[region]}
       </h3>
-      <PhotoGallery
-        items={items}
-        emptyMessage="Aucune publication pour l'instant dans cette région."
-        columns="1-2-3"
-      />
+      <PhotoGallery items={items} emptyMessage={t("emptyRegion")} columns="1-2-3" />
     </div>
   );
 }

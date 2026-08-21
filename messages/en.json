@@ -1,0 +1,171 @@
+{
+  "metadata": {
+    "siteTitle": "Dz.Voyage — Discover Algeria",
+    "siteDescription": "History, cuisine, places to visit and volunteer guides to explore Algeria region by region.",
+    "home": "Home",
+    "cuisine": "Food",
+    "visit": "Places to visit",
+    "blog": "Blog",
+    "contact": "Become a volunteer guide",
+    "login": "Log in",
+    "register": "Sign up",
+    "publish": "Publish"
+  },
+  "nav": {
+    "siteName": "Dz.Voyage",
+    "ariaLabel": "Main navigation",
+    "menuLabel": "Menu",
+    "languageSwitcherLabel": "Change language",
+    "home": "Home",
+    "cuisine": "Food",
+    "visit": "Places to visit",
+    "blog": "Blog",
+    "contact": "Become a guide",
+    "publish": "Publish",
+    "myPosts": "My posts",
+    "moderation": "Moderation",
+    "login": "Log in",
+    "logout": "Log out",
+    "accountMenuLabel": "Account menu"
+  },
+  "footer": {
+    "tagline": "A site built by enthusiasts to discover Algeria region by region — history, cuisine, places to visit and volunteer guides on the ground."
+  },
+  "home": {
+    "historyTitle": "Three thousand years of history"
+  },
+  "cuisine": {
+    "title": "Food",
+    "dishes": "Dishes",
+    "cakes": "Cakes",
+    "viewAll": "View all ({count})",
+    "emptyDishes": "No dish published yet in this region.",
+    "emptyCakes": "No cake published yet in this region.",
+    "emptyCategory": "No recipe published yet in this category.",
+    "backToRegions": "← All regions",
+    "regionTitle": "Food — {region}"
+  },
+  "visit": {
+    "title": "Places to visit",
+    "places": "Places to visit",
+    "festivals": "Festivals",
+    "viewAll": "View all ({count})",
+    "emptyPlaces": "No place published yet in this region.",
+    "emptyFestivals": "No festival listed yet in this region.",
+    "backToRegions": "← All regions",
+    "regionTitle": "Places to visit — {region}"
+  },
+  "blog": {
+    "title": "The travelers' blog",
+    "subtitle": "Nature, recipes and places shared by the community — every photo is manually reviewed before publishing.",
+    "empty": "No post yet.",
+    "emptyCta": "Be the first to share a discovery.",
+    "culinary": "Food",
+    "place": "Places",
+    "nature": "Nature",
+    "emptyCategory": "No {category} post yet.",
+    "emptyNature": "No nature post yet.",
+    "emptyRegion": "No post yet in this region.",
+    "by": "By {username}",
+    "anonymous": "anonymous",
+    "originalFrenchNotice": "Original content in French, not translated.",
+    "publishTitle": "Publish on the blog",
+    "publishIntro": "Share a nature find, a recipe, or a place to visit. Published under the username <b>{username}</b>.",
+    "viewPost": "View post"
+  },
+  "notifications": {
+    "bellLabel": "Notifications",
+    "empty": "No notifications.",
+    "postApproved": "Your post “{title}” has been approved."
+  },
+  "myPosts": {
+    "title": "My posts",
+    "myPostsSection": "My posts",
+    "myReactionsSection": "My reactions",
+    "emptyPosts": "You haven't published anything yet.",
+    "emptyPostsCta": "Share a discovery.",
+    "emptyReactions": "You haven't liked or disliked any post yet."
+  },
+  "gallery": {
+    "noPhoto": "No photo",
+    "close": "Close",
+    "viewPost": "View post"
+  },
+  "contactForm": {
+    "intro": "Do you know your region well and enjoy showing it off? Become a volunteer guide to accompany visitors travelling across Algeria. Leave your details and the region where you can host travelers — we'll get back to you.",
+    "nameLabel": "Full name",
+    "emailLabel": "Email",
+    "regionLabel": "Region where you can host travelers",
+    "messageLabel": "Message (optional)",
+    "submit": "Send my application",
+    "submitting": "Sending…",
+    "error": "Couldn't send your request. Please try again.",
+    "success": "Thank you! Your request has been sent, we'll get back to you soon."
+  },
+  "loginForm": {
+    "title": "Log in",
+    "subtitle": "Log in to publish on the blog and react to posts.",
+    "oauthError": "Google sign-in failed. Please try again.",
+    "googleCta": "Log in with Google",
+    "or": "or",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "submit": "Log in",
+    "submitting": "Logging in…",
+    "error": "Incorrect email or password.",
+    "noAccount": "No account yet?",
+    "signUpLink": "Sign up"
+  },
+  "registerForm": {
+    "title": "Sign up",
+    "subtitle": "Create an account to share your photos and discoveries of Algeria.",
+    "googleCta": "Continue with Google",
+    "or": "or",
+    "usernameLabel": "Username",
+    "usernameHint": "Shown publicly on your photos and posts.",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "confirmPasswordLabel": "Confirm password",
+    "submit": "Create my account",
+    "submitting": "Creating…",
+    "usernameInvalid": "Username must be 3 to 30 characters (letters, digits, - or _).",
+    "passwordWeak": "Password too weak. {requirements}",
+    "passwordMismatch": "The two passwords don't match.",
+    "emailTaken": "This email is already in use.",
+    "genericError": "Couldn't create the account. Please try again.",
+    "alreadyAccount": "Already have an account?",
+    "loginLink": "Log in",
+    "googleNote": "With Google, a username is generated automatically from your email.",
+    "passwordRequirements": "At least 8 characters, with at least one uppercase letter, one lowercase letter and one digit."
+  },
+  "passwordInput": {
+    "show": "Show password",
+    "hide": "Hide password"
+  },
+  "likeDislike": {
+    "like": "Like",
+    "dislike": "Dislike"
+  },
+  "uploadForm": {
+    "typeLegend": "Post type",
+    "regionLabel": "Region",
+    "titleLabel": "Title",
+    "placeNameLabel": "Place name",
+    "categoryLabel": "Category (ancient site, beach, mountain…)",
+    "descriptionLabel": "Description",
+    "storyLabel": "Story",
+    "ingredientsLabel": "Ingredients",
+    "stepsLabel": "Preparation steps",
+    "isDessertLabel": "This is a cake / dessert",
+    "photosLabel": "Photos",
+    "photosHint": "Your photos will be tagged with your username and will go through manual review before publishing.",
+    "submit": "Publish",
+    "submitting": "Sending…",
+    "errorNoPhoto": "Add at least one photo.",
+    "errorRecipeFields": "Fill in the ingredients and preparation steps.",
+    "errorPlaceName": "Fill in the place name.",
+    "errorSavePost": "Couldn't save the post. Please try again.",
+    "errorUploadPhoto": "Post saved but a photo upload failed.",
+    "success": "Post sent! It will be visible after manual review of the photos."
+  }
+}

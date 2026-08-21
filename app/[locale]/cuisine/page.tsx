@@ -1,20 +1,34 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getContentPhotoUrl, getPhotoUrl } from "@/lib/storage";
-import { chapo, gateaux, regions } from "@/lib/content/cuisine";
+import * as cuisineFr from "@/lib/content/cuisine";
+import * as cuisineEn from "@/lib/content/cuisine.en";
 import { recipeToGalleryItem } from "@/lib/gallery-mappers";
 import { pickRandom } from "@/lib/random";
 import { PhotoGallery } from "@/components/PhotoGallery";
-import type { Database } from "@/types/database";
+import type { Database, Region } from "@/types/database";
 
-export const metadata: Metadata = { title: "Cuisine" };
+type Props = { params: Promise<{ locale: string }> };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "metadata" });
+  return { title: t("cuisine") };
+}
 
 const PREVIEW_COUNT = 3;
 
 type Recipe = Database["public"]["Tables"]["recipes"]["Row"];
 
-export default async function CuisinePage() {
+export default async function CuisinePage({ params }: Props) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
+  const { chapo, gateaux, regions } = locale === "en" ? cuisineEn : cuisineFr;
+  const t = await getTranslations("cuisine");
+
   const supabase = await createClient();
   const { data: recipes } = await supabase
     .from("recipes")
@@ -28,7 +42,7 @@ export default async function CuisinePage() {
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
-      <h1 className="font-display text-3xl text-nuit">Cuisine</h1>
+      <h1 className="font-display text-3xl text-nuit">{t("title")}</h1>
       <p className="mt-3 max-w-prose text-encre/85">{chapo}</p>
 
       <div className="mt-12 flex flex-col gap-16">
@@ -43,15 +57,21 @@ export default async function CuisinePage() {
               <p className="mt-3 max-w-prose text-encre/85">{texte}</p>
 
               <RecipeGroup
-                titre="Plats"
+                titre={t("dishes")}
+                emptyMessage={t("emptyDishes")}
+                viewAllLabel={(count) => t("viewAll", { count })}
                 recipes={plats}
                 region={region}
+                locale={locale}
                 getImageUrl={getRecipeImageUrl}
               />
               <RecipeGroup
-                titre="Gâteaux"
+                titre={t("cakes")}
+                emptyMessage={t("emptyCakes")}
+                viewAllLabel={(count) => t("viewAll", { count })}
                 recipes={gateauxRegion}
                 region={region}
+                locale={locale}
                 getImageUrl={getRecipeImageUrl}
               />
             </section>
@@ -69,18 +89,24 @@ export default async function CuisinePage() {
 
 async function RecipeGroup({
   titre,
+  emptyMessage,
+  viewAllLabel,
   recipes,
   region,
+  locale,
   getImageUrl,
 }: {
   titre: string;
+  emptyMessage: string;
+  viewAllLabel: (count: number) => string;
   recipes: Recipe[];
-  region: string;
+  region: Region;
+  locale: string;
   getImageUrl: (recipe: Recipe) => Promise<string | null> | string | null;
 }) {
   const preview = pickRandom(recipes, PREVIEW_COUNT);
   const items = await Promise.all(
-    preview.map(async (recipe) => recipeToGalleryItem(recipe, await getImageUrl(recipe))),
+    preview.map(async (recipe) => recipeToGalleryItem(recipe, await getImageUrl(recipe), locale)),
   );
 
   return (
@@ -91,17 +117,14 @@ async function RecipeGroup({
         </h3>
         {recipes.length > PREVIEW_COUNT && (
           <Link
-            href={`/cuisine/${region}`}
+            href={{ pathname: "/cuisine/[region]", params: { region } }}
             className="font-utility text-xs uppercase tracking-wide text-argile hover:text-nuit"
           >
-            Voir tout ({recipes.length})
+            {viewAllLabel(recipes.length)}
           </Link>
         )}
       </div>
-      <PhotoGallery
-        items={items}
-        emptyMessage="Aucune recette publiée pour l'instant dans cette catégorie."
-      />
+      <PhotoGallery items={items} emptyMessage={emptyMessage} />
     </div>
   );
 }

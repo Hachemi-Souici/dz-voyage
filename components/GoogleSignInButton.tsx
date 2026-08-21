@@ -2,16 +2,26 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { getPathname } from "@/i18n/navigation";
 
-export function GoogleSignInButton({ label }: { label: string }) {
+type Props = { label: string; locale: string };
+
+export function GoogleSignInButton({ label, locale }: Props) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleClick = async () => {
     setIsSubmitting(true);
     const supabase = createClient();
+
+    // /auth/callback est hors routage i18n (route technique) — on lui
+    // transmet explicitement les chemins localisés de retour et d'erreur.
+    const next = getPathname({ href: "/", locale });
+    const onError = getPathname({ href: "/connexion", locale });
+    const redirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}&onError=${encodeURIComponent(onError)}`;
+
     await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: `${window.location.origin}/auth/callback` },
+      options: { redirectTo },
     });
     // La redirection vers Google quitte la page ; pas besoin de retomber
     // isSubmitting à false ici.
