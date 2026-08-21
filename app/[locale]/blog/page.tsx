@@ -3,7 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getPhotoUrl } from "@/lib/storage";
-import { REGIONS, getRegionLabels } from "@/lib/labels";
+import { REGIONS, REGION_ACCENT, getRegionLabels } from "@/lib/labels";
 import { postToGalleryItem } from "@/lib/gallery-mappers";
 import { PhotoGallery } from "@/components/PhotoGallery";
 import type { Database, Region } from "@/types/database";
@@ -161,7 +161,9 @@ async function RegionSubsection({
 
   return (
     <div>
-      <h3 className="font-utility text-sm uppercase tracking-wide text-zellige">
+      <h3
+        className={`font-utility text-sm uppercase tracking-wide ${REGION_ACCENT[region].text}`}
+      >
         {getRegionLabels(locale)[region]}
       </h3>
       <PhotoGallery items={items} emptyMessage={t("emptyRegion")} columns="1-2-3" />

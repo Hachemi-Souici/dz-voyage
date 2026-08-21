@@ -6,6 +6,7 @@ import { getContentPhotoUrl, getPhotoUrl } from "@/lib/storage";
 import * as cuisineFr from "@/lib/content/cuisine";
 import * as cuisineEn from "@/lib/content/cuisine.en";
 import { recipeToGalleryItem } from "@/lib/gallery-mappers";
+import { REGION_ACCENT } from "@/lib/labels";
 import { pickRandom } from "@/lib/random";
 import { PhotoGallery } from "@/components/PhotoGallery";
 import type { Database, Region } from "@/types/database";
@@ -51,9 +52,14 @@ export default async function CuisinePage({ params }: Props) {
           const plats = regionRecipes.filter((r) => !r.is_dessert);
           const gateauxRegion = regionRecipes.filter((r) => r.is_dessert);
 
+          const accent = REGION_ACCENT[region];
+
           return (
-            <section key={region}>
-              <h2 className="font-display text-2xl text-nuit">{titre}</h2>
+            <section
+              key={region}
+              className={`rounded-r-xl border-l-4 ${accent.border} ${accent.gradient} py-6 pr-6 pl-6`}
+            >
+              <h2 className={`font-display text-2xl ${accent.text}`}>{titre}</h2>
               <p className="mt-3 max-w-prose text-encre/85">{texte}</p>
 
               <RecipeGroup
