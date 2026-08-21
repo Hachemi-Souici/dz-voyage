@@ -73,6 +73,11 @@
     "publishIntro": "Share a nature find, a recipe, or a place to visit. Published under the username <b>{username}</b>.",
     "viewPost": "View post"
   },
+  "notifications": {
+    "bellLabel": "Notifications",
+    "empty": "No notifications.",
+    "postApproved": "Your post “{title}” has been approved."
+  },
   "myPosts": {
     "title": "My posts",
     "myPostsSection": "My posts",

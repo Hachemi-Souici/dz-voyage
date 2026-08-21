@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { getCurrentProfile } from "@/lib/auth";
 import { UserMenu } from "@/components/UserMenu";
+import { NotificationBell } from "@/components/NotificationBell";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { MobileNav } from "@/components/MobileNav";
 import { Link } from "@/i18n/navigation";
@@ -44,7 +45,10 @@ export async function SiteHeader({ showLanguageSwitcher = true }: Props = {}) {
         <div className="flex items-center gap-4 font-utility text-sm uppercase tracking-wide">
           {showLanguageSwitcher && <LanguageSwitcher />}
           {profile ? (
-            <UserMenu username={profile.username} isAdmin={profile.is_admin} />
+            <>
+              <NotificationBell userId={profile.id} />
+              <UserMenu username={profile.username} isAdmin={profile.is_admin} />
+            </>
           ) : (
             <Link href="/connexion" className="text-nuit hover:text-argile">
               {t("login")}

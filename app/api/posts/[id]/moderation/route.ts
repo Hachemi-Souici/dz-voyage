@@ -56,7 +56,7 @@ export async function POST(
 
   const { data: post, error: postError } = await admin
     .from("posts")
-    .select("id, type, region, title, body, details")
+    .select("id, author_id, type, region, title, body, details")
     .eq("id", postId)
     .single();
 
@@ -71,6 +71,12 @@ export async function POST(
 
   if (updateError) {
     return NextResponse.json({ error: updateError.message }, { status: 500 });
+  }
+
+  if (action === "approuver") {
+    await admin
+      .from("notifications")
+      .insert({ user_id: post.author_id, post_id: post.id, type: "post_approved" });
   }
 
   if (action === "approuver" && (post.type === "recette" || post.type === "lieu")) {

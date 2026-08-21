@@ -14,6 +14,7 @@ export type PostStatus =
   | "rejetee"
   | "revision_manuelle";
 export type ReactionType = "like" | "dislike";
+export type NotificationType = "post_approved";
 
 /** Champs conditionnels selon `posts.type`, stockés dans `posts.details`. */
 export type RecettePostDetails = {
@@ -289,6 +290,41 @@ export interface Database {
           message: string | null;
         }>;
         Relationships: [];
+      };
+      notifications: {
+        Row: {
+          id: string;
+          user_id: string;
+          post_id: string | null;
+          type: NotificationType;
+          read: boolean;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          post_id?: string | null;
+          type?: NotificationType;
+          read?: boolean;
+          created_at?: string;
+        };
+        Update: Partial<{ read: boolean }>;
+        Relationships: [
+          {
+            foreignKeyName: "notifications_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "notifications_post_id_fkey";
+            columns: ["post_id"];
+            isOneToOne: false;
+            referencedRelation: "posts";
+            referencedColumns: ["id"];
+          },
+        ];
       };
     };
     Views: Record<string, never>;
