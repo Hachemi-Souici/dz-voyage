@@ -1,4 +1,4 @@
-import type { PostType, Region } from "@/types/database";
+import type { PostStatus, PostType, Region } from "@/types/database";
 
 export const TYPE_LABELS: Record<PostType, string> = {
   nature: "Nature",
@@ -27,6 +27,25 @@ export const REGION_LABELS_EN: Record<Region, string> = {
 };
 
 export const REGIONS: Region[] = ["est", "ouest", "centre", "sud"];
+
+export const STATUS_LABELS: Record<PostStatus, string> = {
+  en_attente: "En attente",
+  approuvee: "Approuvée",
+  rejetee: "Rejetée",
+  revision_manuelle: "À revoir",
+};
+
+export const STATUS_LABELS_EN: Record<PostStatus, string> = {
+  en_attente: "Pending",
+  approuvee: "Approved",
+  rejetee: "Rejected",
+  revision_manuelle: "Needs review",
+};
+
+/** Libellés de statut de publication selon la langue courante (fr par défaut). */
+export function getStatusLabels(locale: string): Record<PostStatus, string> {
+  return locale === "en" ? STATUS_LABELS_EN : STATUS_LABELS;
+}
 
 /** Libellés de région selon la langue courante (fr par défaut). */
 export function getRegionLabels(locale: string): Record<Region, string> {

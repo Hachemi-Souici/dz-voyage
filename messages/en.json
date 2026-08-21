@@ -21,9 +21,11 @@
     "blog": "Blog",
     "contact": "Become a guide",
     "publish": "Publish",
+    "myPosts": "My posts",
     "moderation": "Moderation",
     "login": "Log in",
-    "logout": "Log out"
+    "logout": "Log out",
+    "accountMenuLabel": "Account menu"
   },
   "footer": {
     "tagline": "A site built by enthusiasts to discover Algeria region by region — history, cuisine, places to visit and volunteer guides on the ground."
@@ -69,6 +71,14 @@
     "publishTitle": "Publish on the blog",
     "publishIntro": "Share a nature find, a recipe, or a place to visit. Published under the username <b>{username}</b>.",
     "viewPost": "View post"
+  },
+  "myPosts": {
+    "title": "My posts",
+    "myPostsSection": "My posts",
+    "myReactionsSection": "My reactions",
+    "emptyPosts": "You haven't published anything yet.",
+    "emptyPostsCta": "Share a discovery.",
+    "emptyReactions": "You haven't liked or disliked any post yet."
   },
   "gallery": {
     "noPhoto": "No photo",

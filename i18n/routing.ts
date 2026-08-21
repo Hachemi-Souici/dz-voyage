@@ -20,6 +20,7 @@ export const routing = defineRouting({
     "/blog": "/blog",
     "/blog/[id]": "/blog/[id]",
     "/blog/publier": { fr: "/blog/publier", en: "/blog/publish" },
+    "/blog/mes-publications": { fr: "/blog/mes-publications", en: "/blog/my-posts" },
     "/contact": "/contact",
     "/connexion": { fr: "/connexion", en: "/login" },
     "/inscription": { fr: "/inscription", en: "/register" },

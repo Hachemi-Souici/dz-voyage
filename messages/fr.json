@@ -21,9 +21,11 @@
     "blog": "Blog",
     "contact": "Devenir guide",
     "publish": "Publier",
+    "myPosts": "Mes publications",
     "moderation": "Modération",
     "login": "Connexion",
-    "logout": "Se déconnecter"
+    "logout": "Se déconnecter",
+    "accountMenuLabel": "Menu du compte"
   },
   "footer": {
     "tagline": "Un site de passionnés pour découvrir l'Algérie région par région — histoire, cuisine, lieux à visiter et guides bénévoles sur le terrain."
@@ -69,6 +71,14 @@
     "publishTitle": "Publier sur le blog",
     "publishIntro": "Partagez une découverte nature, une recette ou un lieu à visiter. Publié sous le pseudo <b>{username}</b>.",
     "viewPost": "Voir la publication"
+  },
+  "myPosts": {
+    "title": "Mes publications",
+    "myPostsSection": "Mes publications",
+    "myReactionsSection": "Mes réactions",
+    "emptyPosts": "Vous n'avez encore rien publié.",
+    "emptyPostsCta": "Publier une découverte.",
+    "emptyReactions": "Vous n'avez encore aimé ou pas aimé aucune publication."
   },
   "gallery": {
     "noPhoto": "Pas de photo",

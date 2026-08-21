@@ -1,7 +1,6 @@
-import NextLink from "next/link";
 import { getTranslations } from "next-intl/server";
 import { getCurrentProfile } from "@/lib/auth";
-import { SignOutButton } from "@/components/SignOutButton";
+import { UserMenu } from "@/components/UserMenu";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { Link } from "@/i18n/navigation";
 
@@ -40,18 +39,7 @@ export async function SiteHeader({ showLanguageSwitcher = true }: Props = {}) {
         <div className="flex items-center gap-4 font-utility text-sm uppercase tracking-wide">
           {showLanguageSwitcher && <LanguageSwitcher />}
           {profile ? (
-            <>
-              <Link href="/blog/publier" className="text-argile hover:text-nuit">
-                {t("publish")}
-              </Link>
-              {profile.is_admin && (
-                // Hors routage i18n (voir middleware.ts) : lien absolu simple.
-                <NextLink href="/admin/moderation" className="text-nuit hover:text-argile">
-                  {t("moderation")}
-                </NextLink>
-              )}
-              <SignOutButton />
-            </>
+            <UserMenu username={profile.username} isAdmin={profile.is_admin} />
           ) : (
             <Link href="/connexion" className="text-nuit hover:text-argile">
               {t("login")}
