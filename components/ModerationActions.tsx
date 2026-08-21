@@ -7,7 +7,7 @@ type Action = "approuver" | "rejeter" | "revision_manuelle";
 
 export function ModerationActions({ postId }: { postId: string }) {
   const router = useRouter();
-  const [pendingAction, setPendingAction] = useState<Action | null>(null);
+  const [pendingAction, setPendingAction] = useState<Action | "supprimer" | null>(null);
 
   const handleAction = async (action: Action) => {
     setPendingAction(action);
@@ -16,6 +16,16 @@ export function ModerationActions({ postId }: { postId: string }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ action }),
     });
+    setPendingAction(null);
+    router.refresh();
+  };
+
+  const handleDelete = async () => {
+    if (!window.confirm("Supprimer définitivement cette publication ? Cette action est irréversible.")) {
+      return;
+    }
+    setPendingAction("supprimer");
+    await fetch(`/api/posts/${postId}`, { method: "DELETE" });
     setPendingAction(null);
     router.refresh();
   };
@@ -45,6 +55,14 @@ export function ModerationActions({ postId }: { postId: string }) {
         className="rounded border border-nuit/30 px-3 py-1.5 font-utility text-sm text-nuit hover:border-nuit disabled:opacity-60"
       >
         À revoir
+      </button>
+      <button
+        type="button"
+        onClick={handleDelete}
+        disabled={pendingAction !== null}
+        className="rounded border border-argile px-3 py-1.5 font-utility text-sm text-argile hover:bg-argile hover:text-chaux disabled:opacity-60"
+      >
+        Supprimer
       </button>
     </div>
   );

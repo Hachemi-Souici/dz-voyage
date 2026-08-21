@@ -3,10 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase/client";
+import type { NotificationType } from "@/types/database";
 
 type Notification = {
   id: string;
   post_id: string | null;
+  type: NotificationType;
   read: boolean;
   post: { title: string } | null;
 };
@@ -14,8 +16,10 @@ type Notification = {
 /**
  * Cloche de notifications in-app (pas d'email/push pour l'instant) —
  * charge les notifications de l'utilisateur au montage, les marque
- * lues a l'ouverture du panneau. Pour l'instant, seul l'evenement
- * "publication approuvee" existe (voir app/api/posts/[id]/moderation).
+ * lues a l'ouverture du panneau. Deux evenements : "publication
+ * approuvee" (auteur, lien vers la publication) et "publication a
+ * moderer" (admins, lien vers /admin/moderation — voir
+ * app/api/moderate et app/api/posts/[id]/moderation).
  */
 export function NotificationBell({ userId }: { userId: string }) {
   const t = useTranslations("notifications");
@@ -28,7 +32,7 @@ export function NotificationBell({ userId }: { userId: string }) {
     const supabase = createClient();
     supabase
       .from("notifications")
-      .select("id, post_id, read, post:posts(title)")
+      .select("id, post_id, type, read, post:posts(title)")
       .eq("user_id", userId)
       .order("created_at", { ascending: false })
       .limit(20)
@@ -102,23 +106,37 @@ export function NotificationBell({ userId }: { userId: string }) {
             <p className="px-2 py-2 text-sm text-encre/60">{t("empty")}</p>
           ) : (
             <ul className="flex flex-col gap-1">
-              {notifications.map((notification) => (
-                <li key={notification.id}>
-                  {notification.post_id ? (
-                    <a
-                      href={`/${locale}/blog/${notification.post_id}`}
-                      onClick={() => setIsOpen(false)}
-                      className="block rounded px-2 py-2 text-sm text-encre hover:bg-chaux"
-                    >
-                      {t("postApproved", { title: notification.post?.title ?? "" })}
-                    </a>
-                  ) : (
-                    <p className="px-2 py-2 text-sm text-encre">
-                      {t("postApproved", { title: notification.post?.title ?? "" })}
-                    </p>
-                  )}
-                </li>
-              ))}
+              {notifications.map((notification) => {
+                const message = t(
+                  notification.type === "post_pending" ? "postPending" : "postApproved",
+                  { title: notification.post?.title ?? "" },
+                );
+                // "post_pending" (admins) pointe vers /admin/moderation,
+                // hors routage i18n (pas de prefixe de langue) ;
+                // "post_approved" (auteur) pointe vers la publication.
+                const href =
+                  notification.type === "post_pending"
+                    ? "/admin/moderation"
+                    : notification.post_id
+                      ? `/${locale}/blog/${notification.post_id}`
+                      : null;
+
+                return (
+                  <li key={notification.id}>
+                    {href ? (
+                      <a
+                        href={href}
+                        onClick={() => setIsOpen(false)}
+                        className="block rounded px-2 py-2 text-sm text-encre hover:bg-chaux"
+                      >
+                        {message}
+                      </a>
+                    ) : (
+                      <p className="px-2 py-2 text-sm text-encre">{message}</p>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
           )}
         </div>

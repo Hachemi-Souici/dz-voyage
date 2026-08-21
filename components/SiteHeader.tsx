@@ -20,15 +20,14 @@ const navLinks = [
 export async function SiteHeader({ showLanguageSwitcher = true }: Props = {}) {
   const [profile, t] = await Promise.all([getCurrentProfile(), getTranslations("nav")]);
 
+  const menuProfile = profile ? { username: profile.username, isAdmin: profile.is_admin } : null;
+
   return (
     <header className="border-b border-nuit/10 bg-chaux">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6">
-        <div className="flex items-center gap-3">
-          <MobileNav />
-          <Link href="/" className="font-display text-xl text-nuit">
-            {t("siteName")}
-          </Link>
-        </div>
+        <Link href="/" className="font-display text-xl text-nuit">
+          {t("siteName")}
+        </Link>
 
         <nav aria-label={t("ariaLabel")} className="hidden lg:block">
           <ul className="flex flex-wrap items-center gap-x-6 gap-y-2 font-utility text-sm uppercase tracking-wide text-nuit">
@@ -42,18 +41,23 @@ export async function SiteHeader({ showLanguageSwitcher = true }: Props = {}) {
           </ul>
         </nav>
 
+        {/* Profil (avatar/connexion) reserve au desktop (lg) — sur mobile
+            et tablette, il est repris a l'interieur du hamburger
+            (MobileNav) ; la cloche de notification, elle, reste
+            toujours visible dans le header. */}
         <div className="flex items-center gap-4 font-utility text-sm uppercase tracking-wide">
-          {showLanguageSwitcher && <LanguageSwitcher />}
-          {profile ? (
-            <>
-              <NotificationBell userId={profile.id} />
+          {showLanguageSwitcher && <div className="hidden lg:block"><LanguageSwitcher /></div>}
+          {profile && <NotificationBell userId={profile.id} />}
+          <div className="hidden lg:block">
+            {profile ? (
               <UserMenu username={profile.username} isAdmin={profile.is_admin} />
-            </>
-          ) : (
-            <Link href="/connexion" className="text-nuit hover:text-argile">
-              {t("login")}
-            </Link>
-          )}
+            ) : (
+              <Link href="/connexion" className="text-nuit hover:text-argile">
+                {t("login")}
+              </Link>
+            )}
+          </div>
+          <MobileNav profile={menuProfile} showLanguageSwitcher={showLanguageSwitcher} />
         </div>
       </div>
     </header>

@@ -15,6 +15,8 @@
     "siteName": "Dz.Voyage",
     "ariaLabel": "Main navigation",
     "menuLabel": "Menu",
+    "pagesLabel": "Pages",
+    "accountLabel": "Account",
     "languageSwitcherLabel": "Change language",
     "home": "Home",
     "cuisine": "Food",
@@ -76,7 +78,8 @@
   "notifications": {
     "bellLabel": "Notifications",
     "empty": "No notifications.",
-    "postApproved": "Your post “{title}” has been approved."
+    "postApproved": "Your post “{title}” has been approved.",
+    "postPending": "New post to moderate: “{title}”."
   },
   "myPosts": {
     "title": "My posts",
@@ -84,7 +87,9 @@
     "myReactionsSection": "My reactions",
     "emptyPosts": "You haven't published anything yet.",
     "emptyPostsCta": "Share a discovery.",
-    "emptyReactions": "You haven't liked or disliked any post yet."
+    "emptyReactions": "You haven't liked or disliked any post yet.",
+    "delete": "Delete",
+    "deleteConfirm": "Permanently delete this post? This action cannot be undone."
   },
   "gallery": {
     "noPhoto": "No photo",

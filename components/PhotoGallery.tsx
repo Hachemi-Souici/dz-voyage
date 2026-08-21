@@ -10,14 +10,29 @@ type Props = {
   items: GalleryItem[];
   emptyMessage: string;
   columns?: "2-3" | "1-2-3";
+  onDelete?: (id: string) => void | Promise<void>;
+  deleteLabel?: string;
 };
 
 /**
  * Grille de cartes (photo + titre + extrait) avec lightbox au clic
- * (photo agrandie + description complète). Utilisée par les pages
- * cuisine, visiter et blog pour un rendu cohérent.
+ * (photo agrandie + description complète, defile si trop longue —
+ * voir `overflow-y-auto` plus bas). Utilisée par les pages cuisine,
+ * visiter et blog pour un rendu cohérent.
+ *
+ * Cartes de taille identique quel que soit le contenu : titre et
+ * extrait tronques a un nombre de lignes fixe (line-clamp) avec une
+ * hauteur minimale reservee, badge toujours present (espace insecable
+ * si absent) — evite que certaines cartes soient plus hautes que
+ * d'autres selon la longueur de la description.
  */
-export function PhotoGallery({ items, emptyMessage, columns = "2-3" }: Props) {
+export function PhotoGallery({
+  items,
+  emptyMessage,
+  columns = "2-3",
+  onDelete,
+  deleteLabel,
+}: Props) {
   const t = useTranslations("gallery");
   const [openId, setOpenId] = useState<string | null>(null);
   const openItem = items.find((item) => item.id === openId) ?? null;
@@ -69,13 +84,15 @@ export function PhotoGallery({ items, emptyMessage, columns = "2-3" }: Props) {
                 </div>
               )}
               <div className="p-3">
-                {item.badge && (
-                  <p className="font-utility text-xs uppercase tracking-wide text-dune">
-                    {item.badge}
-                  </p>
-                )}
-                <p className="mt-0.5 font-display text-base text-nuit">{item.title}</p>
-                <p className="mt-1 line-clamp-2 text-sm text-encre/70">{item.excerpt}</p>
+                <p className="min-h-4 font-utility text-xs uppercase tracking-wide text-dune">
+                  {item.badge ?? " "}
+                </p>
+                <p className="mt-0.5 line-clamp-1 font-display text-base text-nuit">
+                  {item.title}
+                </p>
+                <p className="mt-1 line-clamp-2 min-h-10 text-sm text-encre/70">
+                  {item.excerpt}
+                </p>
               </div>
             </button>
           </li>
@@ -136,6 +153,18 @@ export function PhotoGallery({ items, emptyMessage, columns = "2-3" }: Props) {
                 >
                   {t("close")}
                 </button>
+                {onDelete && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setOpenId(null);
+                      onDelete(openItem.id);
+                    }}
+                    className="rounded border border-argile px-4 py-2 font-utility text-sm uppercase tracking-wide text-argile hover:bg-argile hover:text-chaux"
+                  >
+                    {deleteLabel}
+                  </button>
+                )}
               </div>
             </div>
           </div>

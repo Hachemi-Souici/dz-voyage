@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { deletePostAndPhotos } from "@/lib/delete-post";
 import type {
   LieuPostDetails,
   RecettePostDetails,
@@ -21,6 +22,10 @@ const ACTION_TO_STATUS: Record<ModerationAction, string> = {
  * `recette`/`lieu`, matérialise les champs conditionnels vers les
  * tables publiques `recipes`/`places` consommées par les pages
  * cuisine/visiter.
+ *
+ * Décision produit : un post rejeté ne garde pas sa photo en base —
+ * il est supprimé directement (voir lib/delete-post) plutôt que
+ * simplement marqué `rejetee`.
  */
 export async function POST(
   request: Request,
@@ -62,6 +67,14 @@ export async function POST(
 
   if (postError || !post) {
     return NextResponse.json({ error: "Post introuvable" }, { status: 404 });
+  }
+
+  if (action === "rejeter") {
+    const { error } = await deletePostAndPhotos(admin, postId);
+    if (error) {
+      return NextResponse.json({ error }, { status: 500 });
+    }
+    return NextResponse.json({ postId, status: "rejetee", deleted: true });
   }
 
   const { error: updateError } = await admin
