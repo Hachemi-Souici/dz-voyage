@@ -74,7 +74,7 @@ export function UserMenu({ username, isAdmin }: Props) {
             {t("myPosts")}
           </Link>
           {isAdmin && (
-            // Hors routage i18n (voir proxy.ts) : lien absolu simple.
+            // Hors routage i18n (voir middleware.ts) : lien absolu simple.
             <NextLink
               href="/admin/moderation"
               role="menuitem"
