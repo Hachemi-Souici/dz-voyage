@@ -53,14 +53,9 @@ export async function SiteHeader({ showLanguageSwitcher = true }: Props = {}) {
               <SignOutButton />
             </>
           ) : (
-            <>
-              <Link href="/connexion" className="text-nuit hover:text-argile">
-                {t("login")}
-              </Link>
-              <Link href="/inscription" className="text-argile hover:text-nuit">
-                {t("register")}
-              </Link>
-            </>
+            <Link href="/connexion" className="text-nuit hover:text-argile">
+              {t("login")}
+            </Link>
           )}
         </div>
       </div>
