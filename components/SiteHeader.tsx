@@ -2,9 +2,12 @@ import NextLink from "next/link";
 import { getTranslations } from "next-intl/server";
 import { getCurrentProfile } from "@/lib/auth";
 import { SignOutButton } from "@/components/SignOutButton";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { Link } from "@/i18n/navigation";
 
-export async function SiteHeader() {
+type Props = { showLanguageSwitcher?: boolean };
+
+export async function SiteHeader({ showLanguageSwitcher = true }: Props = {}) {
   const [profile, t] = await Promise.all([getCurrentProfile(), getTranslations("nav")]);
 
   const navLinks = [
@@ -35,6 +38,7 @@ export async function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-4 font-utility text-sm uppercase tracking-wide">
+          {showLanguageSwitcher && <LanguageSwitcher />}
           {profile ? (
             <>
               <Link href="/blog/publier" className="text-argile hover:text-nuit">

@@ -14,6 +14,7 @@
   "nav": {
     "siteName": "Dz.Voyage",
     "ariaLabel": "Navigation principale",
+    "languageSwitcherLabel": "Changer de langue",
     "home": "Accueil",
     "cuisine": "Cuisine",
     "visit": "À visiter",

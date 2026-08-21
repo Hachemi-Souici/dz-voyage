@@ -15,7 +15,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <html lang="fr" className={`${fontVariables} h-full`}>
       <body className="flex min-h-full flex-col">
-        <SiteHeader />
+        <SiteHeader showLanguageSwitcher={false} />
         <main className="flex-1">{children}</main>
         <SiteFooter />
       </body>

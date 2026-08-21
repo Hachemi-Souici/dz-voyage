@@ -7,6 +7,10 @@ export const routing = defineRouting({
   locales: ["fr", "en"],
   defaultLocale: "fr",
   localePrefix: "always",
+  // Premiere visite (aucun cookie NEXT_LOCALE) : detecte la langue du
+  // navigateur (Accept-Language) avant de retomber sur defaultLocale.
+  // Un choix explicite via LanguageSwitcher est ensuite retenu par cookie.
+  localeDetection: true,
   pathnames: {
     "/": "/",
     "/cuisine": { fr: "/cuisine", en: "/food" },
