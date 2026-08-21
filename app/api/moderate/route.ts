@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 /**
  * Point de passage de modération anti-nudité, appelé juste après la
@@ -39,6 +40,21 @@ export async function POST(request: Request) {
 
   if (error || !post || post.author_id !== user.id) {
     return NextResponse.json({ error: "Post introuvable" }, { status: 404 });
+  }
+
+  // Notifie chaque admin qu'une publication attend une modération
+  // manuelle (client service_role : les notifications n'ont pas de
+  // policy insert côté client, voir migration 0008).
+  const admin = createAdminClient();
+  const { data: admins } = await admin.from("profiles").select("id").eq("is_admin", true);
+  if (admins && admins.length > 0) {
+    await admin.from("notifications").insert(
+      admins.map((adminProfile) => ({
+        user_id: adminProfile.id,
+        post_id: post.id,
+        type: "post_pending" as const,
+      })),
+    );
   }
 
   return NextResponse.json({

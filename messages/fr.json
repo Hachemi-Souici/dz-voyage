@@ -76,7 +76,8 @@
   "notifications": {
     "bellLabel": "Notifications",
     "empty": "Aucune notification.",
-    "postApproved": "Votre publication « {title} » a été approuvée."
+    "postApproved": "Votre publication « {title} » a été approuvée.",
+    "postPending": "Nouvelle publication à modérer : « {title} »."
   },
   "myPosts": {
     "title": "Mes publications",
@@ -84,7 +85,9 @@
     "myReactionsSection": "Mes réactions",
     "emptyPosts": "Vous n'avez encore rien publié.",
     "emptyPostsCta": "Publier une découverte.",
-    "emptyReactions": "Vous n'avez encore aimé ou pas aimé aucune publication."
+    "emptyReactions": "Vous n'avez encore aimé ou pas aimé aucune publication.",
+    "delete": "Supprimer",
+    "deleteConfirm": "Supprimer définitivement cette publication ? Cette action est irréversible."
   },
   "gallery": {
     "noPhoto": "Pas de photo",

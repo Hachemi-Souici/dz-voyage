@@ -14,7 +14,7 @@ export type PostStatus =
   | "rejetee"
   | "revision_manuelle";
 export type ReactionType = "like" | "dislike";
-export type NotificationType = "post_approved";
+export type NotificationType = "post_approved" | "post_pending";
 
 /** Champs conditionnels selon `posts.type`, stockés dans `posts.details`. */
 export type RecettePostDetails = {

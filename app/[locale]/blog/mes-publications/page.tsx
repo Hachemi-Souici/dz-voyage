@@ -7,6 +7,7 @@ import { getPhotoUrl } from "@/lib/storage";
 import { getRegionLabels, getStatusLabels } from "@/lib/labels";
 import { postToGalleryItem } from "@/lib/gallery-mappers";
 import { PhotoGallery } from "@/components/PhotoGallery";
+import { MyPostsGallery } from "@/components/MyPostsGallery";
 import type { Database, ReactionType } from "@/types/database";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -99,7 +100,12 @@ export default async function MesPublicationsPage({ params }: Props) {
 
       <section className="mt-10">
         <h2 className="font-display text-2xl text-nuit">{t("myPostsSection")}</h2>
-        <PhotoGallery items={ownItems} emptyMessage={t("emptyPosts")} columns="1-2-3" />
+        <MyPostsGallery
+          items={ownItems}
+          emptyMessage={t("emptyPosts")}
+          deleteLabel={t("delete")}
+          confirmMessage={t("deleteConfirm")}
+        />
       </section>
 
       <section className="mt-16 border-t border-nuit/10 pt-10">
