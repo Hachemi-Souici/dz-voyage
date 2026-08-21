@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { redirect } from "@/i18n/navigation";
 import { getCurrentProfile } from "@/lib/auth";
-import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { getPhotoUrl } from "@/lib/storage";
 import { REGION_LABELS, TYPE_LABELS } from "@/lib/labels";
 import { ModerationActions } from "@/components/ModerationActions";
@@ -15,7 +15,13 @@ export default async function ModerationPage() {
   if (!profile) return redirect({ href: "/connexion", locale: "fr" });
   if (!profile.is_admin) return redirect({ href: "/", locale: "fr" });
 
-  const supabase = await createClient();
+  // Client service_role : la policy RLS "posts_select_approved_or_own"
+  // ne laisse un utilisateur voir que ses propres publications en attente
+  // (+ celles approuvées de tout le monde) — un admin ne verrait donc
+  // jamais les publications en attente des autres utilisateurs avec le
+  // client normal. Sans danger ici : l'accès admin est deja verifie
+  // ci-dessus.
+  const supabase = createAdminClient();
   const { data: posts } = await supabase
     .from("posts")
     .select(
