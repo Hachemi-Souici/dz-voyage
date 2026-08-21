@@ -51,15 +51,17 @@ export default async function VisiterRegionPage({ params }: PageProps) {
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
-      <Link
-        href="/visiter"
-        className="font-utility text-xs uppercase tracking-wide text-zellige hover:text-argile"
-      >
-        {t("backToRegions")}
-      </Link>
-      <h1 className={`mt-2 font-display text-3xl ${accent.text}`}>
-        {t("regionTitle", { region: regionLabel })}
-      </h1>
+      <div className={`rounded-r-xl border-l-4 ${accent.border} ${accent.gradient} py-6 pr-6 pl-6`}>
+        <Link
+          href="/visiter"
+          className="font-utility text-xs uppercase tracking-wide text-zellige hover:text-argile"
+        >
+          {t("backToRegions")}
+        </Link>
+        <h1 className={`mt-2 font-display text-3xl ${accent.text}`}>
+          {t("regionTitle", { region: regionLabel })}
+        </h1>
+      </div>
 
       <div className="mt-8">
         <PhotoGallery items={items} emptyMessage={t("emptyPlaces")} columns="1-2-3" />
