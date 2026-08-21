@@ -2,34 +2,39 @@ import { getTranslations } from "next-intl/server";
 import { getCurrentProfile } from "@/lib/auth";
 import { UserMenu } from "@/components/UserMenu";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { MobileNav } from "@/components/MobileNav";
 import { Link } from "@/i18n/navigation";
 
 type Props = { showLanguageSwitcher?: boolean };
 
+// "Devenir guide" (contact) desactive du header pour l'instant — decision
+// produit temporaire (page /contact toujours accessible directement).
+const navLinks = [
+  { href: "/" as const, labelKey: "home" as const },
+  { href: "/cuisine" as const, labelKey: "cuisine" as const },
+  { href: "/visiter" as const, labelKey: "visit" as const },
+  { href: "/blog" as const, labelKey: "blog" as const },
+];
+
 export async function SiteHeader({ showLanguageSwitcher = true }: Props = {}) {
   const [profile, t] = await Promise.all([getCurrentProfile(), getTranslations("nav")]);
-
-  const navLinks = [
-    { href: "/" as const, label: t("home") },
-    { href: "/cuisine" as const, label: t("cuisine") },
-    { href: "/visiter" as const, label: t("visit") },
-    { href: "/blog" as const, label: t("blog") },
-    { href: "/contact" as const, label: t("contact") },
-  ];
 
   return (
     <header className="border-b border-nuit/10 bg-chaux">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6">
-        <Link href="/" className="font-display text-xl text-nuit">
-          {t("siteName")}
-        </Link>
+        <div className="flex items-center gap-3">
+          <MobileNav />
+          <Link href="/" className="font-display text-xl text-nuit">
+            {t("siteName")}
+          </Link>
+        </div>
 
-        <nav aria-label={t("ariaLabel")}>
+        <nav aria-label={t("ariaLabel")} className="hidden lg:block">
           <ul className="flex flex-wrap items-center gap-x-6 gap-y-2 font-utility text-sm uppercase tracking-wide text-nuit">
             {navLinks.map((link) => (
               <li key={link.href}>
                 <Link href={link.href} className="hover:text-argile">
-                  {link.label}
+                  {t(link.labelKey)}
                 </Link>
               </li>
             ))}
