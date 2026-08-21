@@ -1,12 +1,18 @@
 "use client";
 
 import { useState, type ChangeEvent, type FormEvent } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase/client";
 import { compressImages } from "@/lib/image";
-import { REGION_LABELS, TYPE_LABELS } from "@/lib/labels";
+import { getRegionLabels, getTypeLabels } from "@/lib/labels";
 import type { PostDetails, PostType, Region } from "@/types/database";
 
 export function UploadForm({ authorId }: { authorId: string }) {
+  const t = useTranslations("uploadForm");
+  const locale = useLocale();
+  const regionLabels = getRegionLabels(locale);
+  const typeLabels = getTypeLabels(locale);
+
   const [type, setType] = useState<PostType>("nature");
   const [region, setRegion] = useState<Region>("centre");
   const [title, setTitle] = useState("");
@@ -42,15 +48,15 @@ export function UploadForm({ authorId }: { authorId: string }) {
     setSuccessMessage(null);
 
     if (photos.length === 0) {
-      setErrorMessage("Ajoutez au moins une photo.");
+      setErrorMessage(t("errorNoPhoto"));
       return;
     }
     if (type === "recette" && (!ingredients.trim() || !steps.trim())) {
-      setErrorMessage("Renseignez les ingrédients et les étapes de la recette.");
+      setErrorMessage(t("errorRecipeFields"));
       return;
     }
     if (type === "lieu" && !placeName.trim()) {
-      setErrorMessage("Renseignez le nom du lieu.");
+      setErrorMessage(t("errorPlaceName"));
       return;
     }
 
@@ -71,7 +77,7 @@ export function UploadForm({ authorId }: { authorId: string }) {
       .single();
 
     if (postError || !post) {
-      setErrorMessage("Impossible d'enregistrer la publication. Réessayez.");
+      setErrorMessage(t("errorSavePost"));
       setIsSubmitting(false);
       return;
     }
@@ -86,7 +92,7 @@ export function UploadForm({ authorId }: { authorId: string }) {
         .upload(storagePath, photo, { contentType: photo.type });
 
       if (uploadError) {
-        setErrorMessage("Publication enregistrée mais l'envoi d'une photo a échoué.");
+        setErrorMessage(t("errorUploadPhoto"));
         setIsSubmitting(false);
         return;
       }
@@ -103,9 +109,7 @@ export function UploadForm({ authorId }: { authorId: string }) {
     });
 
     setIsSubmitting(false);
-    setSuccessMessage(
-      "Publication envoyée ! Elle sera visible après validation manuelle des photos.",
-    );
+    setSuccessMessage(t("success"));
     resetForm();
   };
 
@@ -113,10 +117,10 @@ export function UploadForm({ authorId }: { authorId: string }) {
     <form onSubmit={handleSubmit} className="flex flex-col gap-6">
       <fieldset className="flex flex-col gap-2">
         <legend className="font-utility text-sm uppercase tracking-wide text-nuit">
-          Type de publication
+          {t("typeLegend")}
         </legend>
         <div className="flex flex-wrap gap-4">
-          {(Object.keys(TYPE_LABELS) as PostType[]).map((value) => (
+          {(Object.keys(typeLabels) as PostType[]).map((value) => (
             <label key={value} className="flex items-center gap-2 text-encre">
               <input
                 type="radio"
@@ -125,7 +129,7 @@ export function UploadForm({ authorId }: { authorId: string }) {
                 checked={type === value}
                 onChange={() => setType(value)}
               />
-              {TYPE_LABELS[value]}
+              {typeLabels[value]}
             </label>
           ))}
         </div>
@@ -133,7 +137,7 @@ export function UploadForm({ authorId }: { authorId: string }) {
 
       <div className="flex flex-col gap-1">
         <label htmlFor="region" className="font-utility text-sm uppercase tracking-wide text-nuit">
-          Région
+          {t("regionLabel")}
         </label>
         <select
           id="region"
@@ -141,9 +145,9 @@ export function UploadForm({ authorId }: { authorId: string }) {
           onChange={(event) => setRegion(event.target.value as Region)}
           className="rounded border border-nuit/30 bg-white px-3 py-2 text-encre"
         >
-          {(Object.keys(REGION_LABELS) as Region[]).map((value) => (
+          {(Object.keys(regionLabels) as Region[]).map((value) => (
             <option key={value} value={value}>
-              {REGION_LABELS[value]}
+              {regionLabels[value]}
             </option>
           ))}
         </select>
@@ -151,7 +155,7 @@ export function UploadForm({ authorId }: { authorId: string }) {
 
       <div className="flex flex-col gap-1">
         <label htmlFor="title" className="font-utility text-sm uppercase tracking-wide text-nuit">
-          Titre
+          {t("titleLabel")}
         </label>
         <input
           id="title"
@@ -169,7 +173,7 @@ export function UploadForm({ authorId }: { authorId: string }) {
         <>
           <div className="flex flex-col gap-1">
             <label htmlFor="placeName" className="font-utility text-sm uppercase tracking-wide text-nuit">
-              Nom du lieu
+              {t("placeNameLabel")}
             </label>
             <input
               id="placeName"
@@ -182,7 +186,7 @@ export function UploadForm({ authorId }: { authorId: string }) {
           </div>
           <div className="flex flex-col gap-1">
             <label htmlFor="category" className="font-utility text-sm uppercase tracking-wide text-nuit">
-              Catégorie (site antique, plage, montagne…)
+              {t("categoryLabel")}
             </label>
             <input
               id="category"
@@ -197,7 +201,7 @@ export function UploadForm({ authorId }: { authorId: string }) {
 
       <div className="flex flex-col gap-1">
         <label htmlFor="body" className="font-utility text-sm uppercase tracking-wide text-nuit">
-          {type === "lieu" ? "Description" : "Récit"}
+          {type === "lieu" ? t("descriptionLabel") : t("storyLabel")}
         </label>
         <textarea
           id="body"
@@ -215,7 +219,7 @@ export function UploadForm({ authorId }: { authorId: string }) {
         <>
           <div className="flex flex-col gap-1">
             <label htmlFor="ingredients" className="font-utility text-sm uppercase tracking-wide text-nuit">
-              Ingrédients
+              {t("ingredientsLabel")}
             </label>
             <textarea
               id="ingredients"
@@ -228,7 +232,7 @@ export function UploadForm({ authorId }: { authorId: string }) {
           </div>
           <div className="flex flex-col gap-1">
             <label htmlFor="steps" className="font-utility text-sm uppercase tracking-wide text-nuit">
-              Étapes de préparation
+              {t("stepsLabel")}
             </label>
             <textarea
               id="steps"
@@ -245,14 +249,14 @@ export function UploadForm({ authorId }: { authorId: string }) {
               checked={isDessert}
               onChange={(event) => setIsDessert(event.target.checked)}
             />
-            C&apos;est un gâteau / dessert
+            {t("isDessertLabel")}
           </label>
         </>
       )}
 
       <div className="flex flex-col gap-1">
         <label htmlFor="photos" className="font-utility text-sm uppercase tracking-wide text-nuit">
-          Photos
+          {t("photosLabel")}
         </label>
         <input
           id="photos"
@@ -263,10 +267,7 @@ export function UploadForm({ authorId }: { authorId: string }) {
           onChange={handlePhotosChange}
           className="text-encre"
         />
-        <p className="text-xs text-encre/60">
-          Vos photos seront taguées avec votre pseudo et passeront par une
-          validation manuelle avant publication.
-        </p>
+        <p className="text-xs text-encre/60">{t("photosHint")}</p>
       </div>
 
       {errorMessage && (
@@ -285,7 +286,7 @@ export function UploadForm({ authorId }: { authorId: string }) {
         disabled={isSubmitting}
         className="rounded bg-argile px-4 py-2 font-utility text-sm uppercase tracking-wide text-chaux hover:bg-nuit disabled:opacity-60"
       >
-        {isSubmitting ? "Envoi…" : "Publier"}
+        {isSubmitting ? t("submitting") : t("submit")}
       </button>
     </form>
   );

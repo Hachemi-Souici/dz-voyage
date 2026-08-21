@@ -1,11 +1,16 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase/client";
-import { REGION_LABELS, REGIONS } from "@/lib/labels";
+import { getRegionLabels, REGIONS } from "@/lib/labels";
 import type { Region } from "@/types/database";
 
 export function ContactForm() {
+  const t = useTranslations("contactForm");
+  const locale = useLocale();
+  const regionLabels = getRegionLabels(locale);
+
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [region, setRegion] = useState<Region>("centre");
@@ -30,7 +35,7 @@ export function ContactForm() {
     setIsSubmitting(false);
 
     if (error) {
-      setErrorMessage("Impossible d'envoyer votre demande. Réessayez.");
+      setErrorMessage(t("error"));
       return;
     }
 
@@ -40,8 +45,7 @@ export function ContactForm() {
   if (isSubmitted) {
     return (
       <p role="status" className="rounded border border-zellige/30 bg-zellige/10 p-4 text-zellige">
-        Merci ! Votre demande a bien été envoyée, nous vous recontactons
-        bientôt.
+        {t("success")}
       </p>
     );
   }
@@ -50,7 +54,7 @@ export function ContactForm() {
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <div className="flex flex-col gap-1">
         <label htmlFor="fullName" className="font-utility text-sm uppercase tracking-wide text-nuit">
-          Nom complet
+          {t("nameLabel")}
         </label>
         <input
           id="fullName"
@@ -66,7 +70,7 @@ export function ContactForm() {
 
       <div className="flex flex-col gap-1">
         <label htmlFor="email" className="font-utility text-sm uppercase tracking-wide text-nuit">
-          Email
+          {t("emailLabel")}
         </label>
         <input
           id="email"
@@ -80,7 +84,7 @@ export function ContactForm() {
 
       <div className="flex flex-col gap-1">
         <label htmlFor="region" className="font-utility text-sm uppercase tracking-wide text-nuit">
-          Région où vous pouvez accueillir des voyageurs
+          {t("regionLabel")}
         </label>
         <select
           id="region"
@@ -90,7 +94,7 @@ export function ContactForm() {
         >
           {REGIONS.map((value) => (
             <option key={value} value={value}>
-              {REGION_LABELS[value]}
+              {regionLabels[value]}
             </option>
           ))}
         </select>
@@ -98,7 +102,7 @@ export function ContactForm() {
 
       <div className="flex flex-col gap-1">
         <label htmlFor="message" className="font-utility text-sm uppercase tracking-wide text-nuit">
-          Message (facultatif)
+          {t("messageLabel")}
         </label>
         <textarea
           id="message"
@@ -121,7 +125,7 @@ export function ContactForm() {
         disabled={isSubmitting}
         className="mt-2 rounded bg-argile px-4 py-2 font-utility text-sm uppercase tracking-wide text-chaux hover:bg-nuit disabled:opacity-60"
       >
-        {isSubmitting ? "Envoi…" : "Envoyer ma candidature"}
+        {isSubmitting ? t("submitting") : t("submit")}
       </button>
     </form>
   );

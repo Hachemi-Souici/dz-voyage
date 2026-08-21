@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 import type { ReactionType } from "@/types/database";
 
@@ -20,6 +21,7 @@ export function LikeDislikeButtons({
   initialDislikes,
   initialReaction,
 }: Props) {
+  const t = useTranslations("likeDislike");
   const router = useRouter();
   const [likes, setLikes] = useState(initialLikes);
   const [dislikes, setDislikes] = useState(initialDislikes);
@@ -79,7 +81,7 @@ export function LikeDislikeButtons({
             : "border-nuit/30 text-nuit hover:border-zellige hover:text-zellige"
         }`}
       >
-        J&apos;aime · {likes}
+        {t("like")} · {likes}
       </button>
       <button
         type="button"
@@ -91,7 +93,7 @@ export function LikeDislikeButtons({
             : "border-nuit/30 text-nuit hover:border-argile hover:text-argile"
         }`}
       >
-        Je n&apos;aime pas · {dislikes}
+        {t("dislike")} · {dislikes}
       </button>
     </div>
   );

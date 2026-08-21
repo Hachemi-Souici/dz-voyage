@@ -1,9 +1,11 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 export function SignOutButton() {
+  const t = useTranslations("nav");
   const router = useRouter();
 
   const handleSignOut = async () => {
@@ -19,7 +21,7 @@ export function SignOutButton() {
       onClick={handleSignOut}
       className="font-utility text-sm uppercase tracking-wide text-nuit hover:text-argile"
     >
-      Se déconnecter
+      {t("logout")}
     </button>
   );
 }

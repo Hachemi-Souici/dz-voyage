@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type ChangeEvent } from "react";
+import { useTranslations } from "next-intl";
 
 type Props = {
   id: string;
@@ -13,6 +14,7 @@ type Props = {
 
 /** Champ mot de passe avec bouton afficher/masquer (icône œil). */
 export function PasswordInput({ id, value, onChange, autoComplete, minLength, required }: Props) {
+  const t = useTranslations("passwordInput");
   const [isVisible, setIsVisible] = useState(false);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => onChange(event.target.value);
@@ -32,7 +34,7 @@ export function PasswordInput({ id, value, onChange, autoComplete, minLength, re
       <button
         type="button"
         onClick={() => setIsVisible((visible) => !visible)}
-        aria-label={isVisible ? "Masquer le mot de passe" : "Afficher le mot de passe"}
+        aria-label={isVisible ? t("hide") : t("show")}
         aria-pressed={isVisible}
         className="absolute inset-y-0 right-0 flex items-center px-3 text-nuit/50 hover:text-nuit"
       >

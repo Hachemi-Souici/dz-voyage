@@ -1,14 +1,16 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { PasswordInput } from "@/components/PasswordInput";
-import { isPasswordValid, PASSWORD_REQUIREMENTS } from "@/lib/password";
+import { isPasswordValid } from "@/lib/password";
 
 const USERNAME_PATTERN = /^[a-z0-9_-]{3,30}$/i;
 
 export function InscriptionForm() {
+  const t = useTranslations("registerForm");
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -22,19 +24,17 @@ export function InscriptionForm() {
     setErrorMessage(null);
 
     if (!USERNAME_PATTERN.test(username)) {
-      setErrorMessage(
-        "Le pseudo doit faire 3 à 30 caractères (lettres, chiffres, - ou _).",
-      );
+      setErrorMessage(t("usernameInvalid"));
       return;
     }
 
     if (!isPasswordValid(password)) {
-      setErrorMessage(`Mot de passe trop faible. ${PASSWORD_REQUIREMENTS}`);
+      setErrorMessage(t("passwordWeak", { requirements: t("passwordRequirements") }));
       return;
     }
 
     if (password !== confirmPassword) {
-      setErrorMessage("Les deux mots de passe ne correspondent pas.");
+      setErrorMessage(t("passwordMismatch"));
       return;
     }
 
@@ -50,9 +50,7 @@ export function InscriptionForm() {
 
     if (error) {
       setErrorMessage(
-        error.message.includes("already registered")
-          ? "Cet email est déjà utilisé."
-          : "Impossible de créer le compte. Réessayez.",
+        error.message.includes("already registered") ? t("emailTaken") : t("genericError"),
       );
       return;
     }
@@ -65,7 +63,7 @@ export function InscriptionForm() {
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <div className="flex flex-col gap-1">
         <label htmlFor="username" className="font-utility text-sm uppercase tracking-wide text-nuit">
-          Pseudo
+          {t("usernameLabel")}
         </label>
         <input
           id="username"
@@ -77,14 +75,12 @@ export function InscriptionForm() {
           onChange={(event) => setUsername(event.target.value)}
           className="rounded border border-nuit/30 bg-white px-3 py-2 text-encre"
         />
-        <p className="text-xs text-encre/60">
-          Affiché publiquement sur vos photos et publications.
-        </p>
+        <p className="text-xs text-encre/60">{t("usernameHint")}</p>
       </div>
 
       <div className="flex flex-col gap-1">
         <label htmlFor="email" className="font-utility text-sm uppercase tracking-wide text-nuit">
-          Email
+          {t("emailLabel")}
         </label>
         <input
           id="email"
@@ -99,7 +95,7 @@ export function InscriptionForm() {
 
       <div className="flex flex-col gap-1">
         <label htmlFor="password" className="font-utility text-sm uppercase tracking-wide text-nuit">
-          Mot de passe
+          {t("passwordLabel")}
         </label>
         <PasswordInput
           id="password"
@@ -109,7 +105,7 @@ export function InscriptionForm() {
           value={password}
           onChange={setPassword}
         />
-        <p className="text-xs text-encre/60">{PASSWORD_REQUIREMENTS}</p>
+        <p className="text-xs text-encre/60">{t("passwordRequirements")}</p>
       </div>
 
       <div className="flex flex-col gap-1">
@@ -117,7 +113,7 @@ export function InscriptionForm() {
           htmlFor="confirmPassword"
           className="font-utility text-sm uppercase tracking-wide text-nuit"
         >
-          Confirmer le mot de passe
+          {t("confirmPasswordLabel")}
         </label>
         <PasswordInput
           id="confirmPassword"
@@ -140,7 +136,7 @@ export function InscriptionForm() {
         disabled={isSubmitting}
         className="mt-2 rounded bg-argile px-4 py-2 font-utility text-sm uppercase tracking-wide text-chaux hover:bg-nuit disabled:opacity-60"
       >
-        {isSubmitting ? "Création…" : "Créer mon compte"}
+        {isSubmitting ? t("submitting") : t("submit")}
       </button>
     </form>
   );

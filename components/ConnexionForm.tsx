@@ -1,11 +1,13 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { PasswordInput } from "@/components/PasswordInput";
 
 export function ConnexionForm() {
+  const t = useTranslations("loginForm");
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -26,7 +28,7 @@ export function ConnexionForm() {
     setIsSubmitting(false);
 
     if (error) {
-      setErrorMessage("Email ou mot de passe incorrect.");
+      setErrorMessage(t("error"));
       return;
     }
 
@@ -38,7 +40,7 @@ export function ConnexionForm() {
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <div className="flex flex-col gap-1">
         <label htmlFor="email" className="font-utility text-sm uppercase tracking-wide text-nuit">
-          Email
+          {t("emailLabel")}
         </label>
         <input
           id="email"
@@ -53,7 +55,7 @@ export function ConnexionForm() {
 
       <div className="flex flex-col gap-1">
         <label htmlFor="password" className="font-utility text-sm uppercase tracking-wide text-nuit">
-          Mot de passe
+          {t("passwordLabel")}
         </label>
         <PasswordInput
           id="password"
@@ -75,7 +77,7 @@ export function ConnexionForm() {
         disabled={isSubmitting}
         className="mt-2 rounded bg-argile px-4 py-2 font-utility text-sm uppercase tracking-wide text-chaux hover:bg-nuit disabled:opacity-60"
       >
-        {isSubmitting ? "Connexion…" : "Se connecter"}
+        {isSubmitting ? t("submitting") : t("submit")}
       </button>
     </form>
   );

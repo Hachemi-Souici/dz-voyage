@@ -1,28 +1,30 @@
-import Link from "next/link";
+import NextLink from "next/link";
+import { getTranslations } from "next-intl/server";
 import { getCurrentProfile } from "@/lib/auth";
 import { SignOutButton } from "@/components/SignOutButton";
-
-const NAV_LINKS = [
-  { href: "/", label: "Accueil" },
-  { href: "/cuisine", label: "Cuisine" },
-  { href: "/visiter", label: "À visiter" },
-  { href: "/blog", label: "Blog" },
-  { href: "/contact", label: "Devenir guide" },
-];
+import { Link } from "@/i18n/navigation";
 
 export async function SiteHeader() {
-  const profile = await getCurrentProfile();
+  const [profile, t] = await Promise.all([getCurrentProfile(), getTranslations("nav")]);
+
+  const navLinks = [
+    { href: "/" as const, label: t("home") },
+    { href: "/cuisine" as const, label: t("cuisine") },
+    { href: "/visiter" as const, label: t("visit") },
+    { href: "/blog" as const, label: t("blog") },
+    { href: "/contact" as const, label: t("contact") },
+  ];
 
   return (
     <header className="border-b border-nuit/10 bg-chaux">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6">
         <Link href="/" className="font-display text-xl text-nuit">
-          Dz.Voyage
+          {t("siteName")}
         </Link>
 
-        <nav aria-label="Navigation principale">
+        <nav aria-label={t("ariaLabel")}>
           <ul className="flex flex-wrap items-center gap-x-6 gap-y-2 font-utility text-sm uppercase tracking-wide text-nuit">
-            {NAV_LINKS.map((link) => (
+            {navLinks.map((link) => (
               <li key={link.href}>
                 <Link href={link.href} className="hover:text-argile">
                   {link.label}
@@ -36,22 +38,23 @@ export async function SiteHeader() {
           {profile ? (
             <>
               <Link href="/blog/publier" className="text-argile hover:text-nuit">
-                Publier
+                {t("publish")}
               </Link>
               {profile.is_admin && (
-                <Link href="/admin/moderation" className="text-nuit hover:text-argile">
-                  Modération
-                </Link>
+                // Hors routage i18n (voir middleware.ts) : lien absolu simple.
+                <NextLink href="/admin/moderation" className="text-nuit hover:text-argile">
+                  {t("moderation")}
+                </NextLink>
               )}
               <SignOutButton />
             </>
           ) : (
             <>
               <Link href="/connexion" className="text-nuit hover:text-argile">
-                Connexion
+                {t("login")}
               </Link>
               <Link href="/inscription" className="text-argile hover:text-nuit">
-                Inscription
+                {t("register")}
               </Link>
             </>
           )}
