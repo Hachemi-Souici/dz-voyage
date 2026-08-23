@@ -46,3 +46,12 @@ pnpm run deploy
 | `pnpm lint` | ESLint |
 | `pnpm preview` | Build OpenNext + aperçu local sous Workers |
 | `pnpm deploy` | Build OpenNext + déploiement Cloudflare Workers |
+
+## Licence
+
+Le code source (composants, scripts, configuration) est sous licence
+[MIT](./LICENSE), réutilisation libre.
+
+Le contenu éditorial (textes, articles, recettes, photos, données
+touristiques) reste sous tous droits réservés — toute reproduction ou
+réutilisation nécessite une autorisation écrite préalable.
