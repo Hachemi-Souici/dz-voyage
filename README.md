@@ -3,7 +3,7 @@
 Site touristique de l'Algérie — histoire, cuisine, lieux à visiter et
 guides bénévoles, région par région.
 
-**Démo en ligne : https://decouvrir-dz.wdz.workers.dev**
+**Démo en ligne : https://destination-dz.wdz.workers.dev**
 
 ## Stack
 
